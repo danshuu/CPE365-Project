@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Requirements</h1>
+
+<p>A database that will list a hierarchy from various companies, and a rating system for managers to rate their employees. This data could be used for statistical research such as  finding salary differences between companies, jobs at the same or different companies, and age and gender demographics.
+
+The database will hold information on:
+<h4>People</h4>
+<ul>
+<li>First and last name</li>
+<li>Current address</li>
+<li>Gender</li>
+<li>Ethnicity</li>
+<li>Age</li>
+<li>Salary</li>
+</ul>
+<h4>Companies</h4>
+<ul style="list-style-type:disc">
+<li>Name of the company</li>
+<li>City the company is located in </li>
+</ul>
+<h4>Departments</h4>
+<ul>
+<li>Name of the department (ie. human resources, IT, accounting)</li>
+<li>The company that this department is at</li>
+</ul>
+<h4>Employee Job</h4>
+<ul>
+<li>The name of their job (ie. software engineer, product manager, store manager, accountant)<li>
+<li>The specific department they work in, or manage</li>
+<li>The department they work in, or manage at a certain company</li>
+</ul>
+<h4>Employee Ratings</h4>
+<ul>
+<li>A score that measures an employee’s efficiency. </li>
+<li>The score is awarded only by a manager at the company both the employee and manager work at. Call this manager the “rater.”</li>
+<li>The rater’s name is visible as well as the date the score was given. </li>
+</ul>
+
+<h2>Other Requirements</h2>
+<ul style="list-style-type:square">
+<li>A person must have a name, age, gender and current address. But ethnicity and salary can be unreported - a person may be unemployed, or preferred not to state ethnicity.</li>
+<li>A person must specify the gender listed on their birth certificate. </li>
+<li>If a company is listed in the database, it must have a name and a valid city and specific data about that company. </li>
+<li>A company should be able to be broken down into:
+name and city, departments, jobs at the company and jobs at the company per department, specific employee data. </li>
+<li>Looking up an employee’s rating and who rated them should run quickly and be easy to get. </li>
+<li>Data should be able to be collected demographically, geographically, company specific, job specific, department specific. </li>
+</ul>
+</p>
+
+</body>
+</html>
+

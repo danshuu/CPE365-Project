@@ -1,3 +1,3 @@
-CPE365-Project
-Members: Esteban Ramos and Daniel Shu
+CPE 365 Project
+Authors: Daniel Shu, Esteban Ramos
 
