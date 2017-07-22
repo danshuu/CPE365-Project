@@ -22,20 +22,6 @@ CREATE TABLE Address (
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Person (
-   id INT PRIMARY KEY AUTO_INCREMENT,
-   firstName VARCHAR(30) NOT NULL,
-   lastName VARCHAR(30) NOT NULL,
-   salary DECIMAL(8, 2) UNSIGNED,
-   age TINYINT UNSIGNED,
-   gender ENUM('M', 'F', 'Other'),
-   addressId INT,
-   CONSTRAINT FKPerson_addressId FOREIGN KEY (addressId)
-    REFERENCES Address(id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-);
-
 CREATE TABLE Profession (
    id INT PRIMARY KEY AUTO_INCREMENT,
    name VARCHAR(30) NOT NULL
@@ -58,6 +44,24 @@ CREATE TABLE Department (
     REFERENCES Company(id)
     ON UPDATE CASCADE,
    UNIQUE KEY UKname_companyId(name, companyId)
+);
+
+CREATE TABLE Person (
+   id INT PRIMARY KEY AUTO_INCREMENT,
+   firstName VARCHAR(30) NOT NULL,
+   lastName VARCHAR(30) NOT NULL,
+   salary DECIMAL(8, 2) UNSIGNED,
+   age TINYINT UNSIGNED,
+   gender ENUM('M', 'F', 'Other'),
+   addressId INT,
+   deptId INT,
+   CONSTRAINT FKPerson_addressId FOREIGN KEY (addressId)
+    REFERENCES Address(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+   CONSTRAINT FKPerson_deptId FOREIGN KEY (deptId)
+    REFERENCES Department(id)
+    ON UPDATE CASCADE
 );
 
 CREATE TABLE Rating (
