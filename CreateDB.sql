@@ -40,7 +40,6 @@ CREATE TABLE HometownAddress (
    CONSTRAINT FKAddress_cityId FOREIGN KEY (cityId)
     REFERENCES City(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
 );
 
 CREATE TABLE Person (
