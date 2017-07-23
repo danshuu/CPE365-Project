@@ -20,6 +20,7 @@ CREATE TABLE Address (
    CONSTRAINT FKAddress_cityId FOREIGN KEY (cityId)
     REFERENCES City(id)
     ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Profession (
@@ -42,7 +43,8 @@ CREATE TABLE Department (
    companyId INT NOT NULL,
    CONSTRAINT FKDepartment_companyId FOREIGN KEY (companyId)
     REFERENCES Company(id)
-    ON UPDATE CASCADE,
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
    UNIQUE KEY UKname_companyId(name, companyId)
 );
 
@@ -50,18 +52,13 @@ CREATE TABLE Person (
    id INT PRIMARY KEY AUTO_INCREMENT,
    firstName VARCHAR(30) NOT NULL,
    lastName VARCHAR(30) NOT NULL,
-   salary DECIMAL(8, 2) UNSIGNED,
    age TINYINT UNSIGNED,
    gender ENUM('M', 'F', 'Other'),
    addressId INT,
-   deptId INT,
    CONSTRAINT FKPerson_addressId FOREIGN KEY (addressId)
     REFERENCES Address(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
-   CONSTRAINT FKPerson_deptId FOREIGN KEY (deptId)
-    REFERENCES Department(id)
-    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Rating (
@@ -78,11 +75,6 @@ CREATE TABLE Rating (
     ON DELETE CASCADE
 );
 
-CREATE TABLE Division (
-   id INT PRIMARY KEY AUTO_INCREMENT,
-   division VARCHAR(10) NOT NULL
-);
-
 CREATE TABLE CompanyXProfession (
    companyId INT,
    professionId INT,
@@ -97,23 +89,22 @@ CREATE TABLE CompanyXProfession (
    UNIQUE KEY UKcompanyId_professionId(companyId, professionId)
 );
 
-CREATE TABLE PersonXProfession (
+CREATE TABLE Employee (
    personId INT,
    professionId INT,
+   deptId INT,
+   salary DECIMAL(8, 2) UNSIGNED NOT NULL,
    hiredDate DATE NOT NULL,
-   division INT NOT NULL,
-   CONSTRAINT FKPersonXProfession_personId FOREIGN KEY (personId)
+   division ENUM("Upper", "Lower"),
+   CONSTRAINT FKEmployee_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
-    ON UPDATE CASCADE,
-   CONSTRAINT FKPersonXProfession_professionId FOREIGN KEY (professionId)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+   CONSTRAINT FKEmployee_professionId FOREIGN KEY (professionId)
     REFERENCES Profession(id)
     ON UPDATE CASCADE,
-   CONSTRAINT FKPersonXProfession_division FOREIGN KEY (division)
-    REFERENCES Division(id)
+   CONSTRAINT FKEmployee_deptId FOREIGN KEY (deptId)
+    REFERENCES Department(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
-
-INSERT INTO Division (division) VALUES
-   ("Upper"),
-   ("Lower");
