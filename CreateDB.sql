@@ -78,11 +78,6 @@ CREATE TABLE Rating (
     ON DELETE CASCADE
 );
 
-CREATE TABLE Division (
-   id INT PRIMARY KEY AUTO_INCREMENT,
-   division VARCHAR(10) NOT NULL
-);
-
 CREATE TABLE CompanyXProfession (
    companyId INT,
    professionId INT,
@@ -101,7 +96,7 @@ CREATE TABLE PersonXProfession (
    personId INT,
    professionId INT,
    hiredDate DATE NOT NULL,
-   division INT NOT NULL,
+   division ENUM('Upper', 'Lower') NOT NULL,
    CONSTRAINT FKPersonXProfession_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
     ON UPDATE CASCADE,
