@@ -12,7 +12,7 @@ FROM Employee E JOIN Department D
 ON deptId = D.id JOIN Company C
 ON companyId = C.id
 GROUP BY C.id
-HAVING Employee.division = "Lower"
+HAVING E.division = "Lower"
 ORDER BY AVG(salary)
 LIMIT 5;
 
@@ -21,6 +21,14 @@ LIMIT 5;
 -- List the count of 'x' profession at all companies ordered by count of 'x' profession
 
 -- List the top five companies with the lowest employee ratings on average
+SELECT C.name, AVG(score)
+FROM Rating R JOIN Employee E
+ON R.ratedId = E.personId JOIN Department D
+ON deptId = D.id JOIN Company C
+ON companyId = C.id
+GROUP BY C.id
+ORDER BY AVG(score) DESC
+LIMIT 5;
 
 -------
 

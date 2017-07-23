@@ -95,7 +95,7 @@ CREATE TABLE Employee (
    deptId INT,
    salary DECIMAL(8, 2) UNSIGNED NOT NULL,
    hiredDate DATE NOT NULL,
-   division ENUM("Upper", "Lower"),
+   division ENUM('Upper', 'Lower'),
    CONSTRAINT FKEmployee_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
     ON UPDATE CASCADE
