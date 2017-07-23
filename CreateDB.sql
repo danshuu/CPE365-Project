@@ -50,18 +50,13 @@ CREATE TABLE Person (
    id INT PRIMARY KEY AUTO_INCREMENT,
    firstName VARCHAR(30) NOT NULL,
    lastName VARCHAR(30) NOT NULL,
-   salary DECIMAL(8, 2) UNSIGNED,
    age TINYINT UNSIGNED,
    gender ENUM('M', 'F', 'Other'),
    addressId INT,
-   deptId INT,
    CONSTRAINT FKPerson_addressId FOREIGN KEY (addressId)
     REFERENCES Address(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-   CONSTRAINT FKPerson_deptId FOREIGN KEY (deptId)
-    REFERENCES Department(id)
-    ON UPDATE CASCADE
 );
 
 CREATE TABLE Rating (
@@ -97,18 +92,24 @@ CREATE TABLE PersonXProfession (
    professionId INT,
    hiredDate DATE NOT NULL,
    division ENUM('Upper', 'Lower') NOT NULL,
+   salary DECIMAL(8, 2) UNSIGNED NOT NULL,
+   deptId INT NOT NULL,
+
    CONSTRAINT FKPersonXProfession_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
-    ON UPDATE CASCADE,
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
    CONSTRAINT FKPersonXProfession_professionId FOREIGN KEY (professionId)
     REFERENCES Profession(id)
-    ON UPDATE CASCADE,
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
    CONSTRAINT FKPersonXProfession_division FOREIGN KEY (division)
     REFERENCES Division(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
+   CONSTRAINT FKPersonXProfession_deptId FOREIGN KEY (deptId)
+    REFERENCES Department(id)
+    ON UPDATE CASCADE
 );
 
-INSERT INTO Division (division) VALUES
-   ("Upper"),
-   ("Lower");
+INSERT INTO Person (firstName, lastName, age, gender) VALUES ('Bob', 'Smith', 21, 'M'), ('Mary', 'James', 29, 'F');
