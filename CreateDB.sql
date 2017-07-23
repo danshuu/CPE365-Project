@@ -92,19 +92,23 @@ CREATE TABLE CompanyXProfession (
 CREATE TABLE Employee (
    personId INT,
    professionId INT,
-   deptId INT,
-   salary DECIMAL(8, 2) UNSIGNED NOT NULL,
    hiredDate DATE NOT NULL,
-   division ENUM('Upper', 'Lower'),
-   CONSTRAINT FKEmployee_personId FOREIGN KEY (personId)
+   division ENUM('Upper', 'Lower') NOT NULL,
+   salary DECIMAL(8, 2) UNSIGNED NOT NULL,
+   deptId INT NOT NULL,
+   CONSTRAINT FKPersonXProfession_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-   CONSTRAINT FKEmployee_professionId FOREIGN KEY (professionId)
+   CONSTRAINT FKPersonXProfession_professionId FOREIGN KEY (professionId)
     REFERENCES Profession(id)
-    ON UPDATE CASCADE,
-   CONSTRAINT FKEmployee_deptId FOREIGN KEY (deptId)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+   CONSTRAINT FKPersonXProfession_deptId FOREIGN KEY (deptId)
     REFERENCES Department(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
 );
+
+INSERT INTO Person (firstName, lastName, age, gender) VALUES 
+   ('Bob', 'Smith', 21, 'M'), 
+   ('Mary', 'James', 29, 'F');
