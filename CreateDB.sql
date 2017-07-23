@@ -22,11 +22,6 @@ CREATE TABLE Address (
     ON UPDATE CASCADE
 );
 
-CREATE TABLE Profession (
-   id INT PRIMARY KEY AUTO_INCREMENT,
-   name VARCHAR(30) NOT NULL
-);
-
 CREATE TABLE Company (
    id INT PRIMARY KEY AUTO_INCREMENT,
    name VARCHAR(40) NOT NULL,
@@ -56,7 +51,12 @@ CREATE TABLE Person (
    CONSTRAINT FKPerson_addressId FOREIGN KEY (addressId)
     REFERENCES Address(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
+    ON DELETE CASCADE
+);
+
+CREATE TABLE Profession (
+   id INT PRIMARY KEY AUTO_INCREMENT,
+   name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE Rating (
@@ -103,10 +103,6 @@ CREATE TABLE PersonXProfession (
     REFERENCES Profession(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-   CONSTRAINT FKPersonXProfession_division FOREIGN KEY (division)
-    REFERENCES Division(id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
    CONSTRAINT FKPersonXProfession_deptId FOREIGN KEY (deptId)
     REFERENCES Department(id)
     ON UPDATE CASCADE
