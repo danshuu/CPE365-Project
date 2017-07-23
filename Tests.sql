@@ -22,3 +22,20 @@ LIMIT 5;
 
 -- List the top five companies with the lowest employee ratings on average
 
+-------
+
+-- How many software engineers are at Google?
+
+-- How many software engineers at Google are females under the age of 26 hired before
+-- hired before June 1, 1998?
+
+-- list the departments at Amazon.
+
+-- How many female software engineers are making above the average salary at Google?
+
+-- How many software engineers are there in San Diego, CA?
+
+-- How many software engineers are there in San Diego, CA working at Google?
+
+
+
