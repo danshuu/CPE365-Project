@@ -10,19 +10,6 @@ CREATE TABLE City (
    state CHAR(2) NOT NULL
 );
 
-CREATE TABLE Address (
-   id INT PRIMARY KEY AUTO_INCREMENT,
-   addressNumber CHAR(5) NOT NULL,
-   street VARCHAR(40) NOT NULL,
-   zipcode CHAR(5) NOT NULL,
-   zipcodeExt CHAR(4),
-   cityId INT NOT NULL,
-   CONSTRAINT FKAddress_cityId FOREIGN KEY (cityId)
-    REFERENCES City(id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-);
-
 CREATE TABLE Company (
    id INT PRIMARY KEY AUTO_INCREMENT,
    name VARCHAR(40) NOT NULL,
@@ -43,6 +30,19 @@ CREATE TABLE Department (
    UNIQUE KEY UKname_companyId(name, companyId)
 );
 
+CREATE TABLE HometownAddress (
+   id INT PRIMARY KEY AUTO_INCREMENT,
+   addressNumber CHAR(5) NOT NULL,
+   street VARCHAR(40) NOT NULL,
+   zipcode CHAR(5) NOT NULL,
+   zipcodeExt CHAR(4),
+   cityId INT NOT NULL,
+   CONSTRAINT FKAddress_cityId FOREIGN KEY (cityId)
+    REFERENCES City(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+);
+
 CREATE TABLE Person (
    id INT PRIMARY KEY AUTO_INCREMENT,
    firstName VARCHAR(30) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE Person (
    gender ENUM('M', 'F', 'Other'),
    addressId INT,
    CONSTRAINT FKPerson_addressId FOREIGN KEY (addressId)
-    REFERENCES Address(id)
+    REFERENCES HometownAddress(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
@@ -75,27 +75,14 @@ CREATE TABLE Rating (
     ON DELETE CASCADE
 );
 
-CREATE TABLE CompanyXProfession (
-   companyId INT,
-   professionId INT,
-   CONSTRAINT FKCompanyXProfession_companyId FOREIGN KEY (companyId)
-    REFERENCES Company(id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-   CONSTRAINT FKCompanyXProfession_professionId FOREIGN KEY (professionId)
-    REFERENCES Profession(id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-   UNIQUE KEY UKcompanyId_professionId(companyId, professionId)
-);
-
 CREATE TABLE Employee (
-   personId INT,
-   professionId INT,
+   personId INT NOT NULL,
+   professionId INT NOT NULL,
    hiredDate DATE NOT NULL,
    division ENUM('Upper', 'Lower') NOT NULL,
    salary DECIMAL(8, 2) UNSIGNED NOT NULL,
    deptId INT NOT NULL,
+   companyId INT NOT NULL,
    CONSTRAINT FKPersonXProfession_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
     ON UPDATE CASCADE
@@ -107,6 +94,11 @@ CREATE TABLE Employee (
    CONSTRAINT FKPersonXProfession_deptId FOREIGN KEY (deptId)
     REFERENCES Department(id)
     ON UPDATE CASCADE
+    ON DELETE CASCADE,
+   CONSTRAINT FKPersonXProfession_companyId FOREIGN KEY (companyId)
+    REFERENCES Company(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 INSERT INTO Person (firstName, lastName, age, gender) VALUES 
@@ -116,7 +108,13 @@ INSERT INTO Person (firstName, lastName, age, gender) VALUES
    ('Bob', 'James', 18, 'M'),
    ('Janice', 'Tan', 34, 'Other'),
    ('Bob', 'Smith', 24, 'M'),
-   ('Red', 'Fire', 29, 'F');
+   ('Red', 'Fire', 29, 'F'), 
+   ('Kobe', 'Bryant', 38, 'M'),
+   ('Janice', 'White', 32, 'F'),
+   ('Michael', 'Jordan', 54, 'M'),
+   ('Lebron', 'James', 32, 'M'),
+   ('Jerry', 'West', 64, 'M'),
+   ('Random', 'Smith', 24, 'Other');
 
 INSERT INTO Profession VALUES
    (1, "Software Engineer"),
@@ -164,29 +162,26 @@ INSERT INTO Department VALUES
    (15, "Customer Support", 10),
    (16, "Window Cleaning", 10);
 
-INSERT INTO CompanyXProfession VALUES
-   (1, 1), (1, 2), (1, 3), (1, 4),
-   (2, 1), (2, 2), (2, 3), (2, 4),
-   (3, 1), (3, 2), (3, 3),
-   (4, 3), (4, 4),
-   (5, 1),
-   (6, 2), (6, 3),
-   (7, 1), (7, 2), (7, 3), (7, 4),
-   (8, 3), (8, 4),
-   (9, 4),
-   (10, 1), (10, 2), (10, 3), (10, 4);
-
 INSERT INTO Employee VALUES
-   (1, 1, '2014-04-04', 'Upper', 15.50, 1),
-   (2, 2, '2015-06-07', 'Upper', 20.00, 1),
-   (3, 3, '2015-06-07', 'Upper', 30.00, 2),
-   (4, 4, '2016-01-24', 'Lower', 18.00, 1),
-   (5, 1, '2012-01-24', 'Lower', 14.00, 10),
-   (6, 3, '2012-01-24', 'Upper', 18.00, 8);
+   (1, 1, '2014-04-04', 'Upper', 15.50, 1, 3),
+   (2, 2, '2015-06-07', 'Upper', 20.00, 1, 1),
+   (3, 3, '2015-06-07', 'Upper', 30.00, 2, 6),
+   (4, 4, '2016-01-24', 'Lower', 18.00, 1, 2),
+   (5, 1, '2012-01-24', 'Lower', 14.00, 10, 2),
+   (6, 3, '2012-01-24', 'Upper', 18.00, 8, 9),
+   
+   (7, 3, '2015-06-07', 'Upper', 30.00, 2, 3),
+   (8, 4, '2016-01-24', 'Lower', 18.00, 1, 10),
+   (9, 1, '2012-01-24', 'Lower', 14.00, 10, 1),
+   (10, 3, '2012-01-24', 'Upper', 18.00, 8, 10),
+   (11, 3, '2015-06-07', 'Upper', 30.00, 2, 3),
+   (12, 4, '2016-01-24', 'Lower', 18.00, 1, 10),
+   (13, 1, '2012-01-24', 'Lower', 14.00, 10, 7);
+   
 
 INSERT INTO Rating VALUES
    (1, 4, 4),
    (2, 8, 4);
 
-INSERT INTO Address VALUES
+INSERT INTO HometownAddress VALUES
    (1, '1111', 'Happy Lane', '93410', NULL, 4);

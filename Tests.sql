@@ -1,6 +1,7 @@
 -- Test Suite
 
 -- List a count of all employees at every company
+select c.name Company, count(p.id) numEmployees from Person p join Employee e on p.id = personId join Company c on c.id = companyId group by c.name;
 
 -- List 'x' profession in each department of 'y' company
 
