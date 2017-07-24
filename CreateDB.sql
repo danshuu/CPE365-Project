@@ -39,7 +39,8 @@ CREATE TABLE HometownAddress (
    cityId INT NOT NULL,
    CONSTRAINT FKHometownAddress_cityId FOREIGN KEY (cityId)
     REFERENCES City(id)
-    ON UPDATE CASCADE
+    ON UPDATE CASCADE,
+   UNIQUE KEY UKaddressNumber_street_zipcode_cityId (addressNumber, street, zipcode, cityId)
 );
 
 CREATE TABLE Person (
@@ -86,7 +87,8 @@ CREATE TABLE CompanyXProfession (
    CONSTRAINT FKPersonXCompany_companyId FOREIGN KEY (companyId)
     REFERENCES Company(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+   UNIQUE KEY UKprofessionId_companyId(professionId, companyId)
 );
 
 CREATE TABLE Employee (
