@@ -75,10 +75,12 @@ select c.name Company, p.firstName, count(e.personId) numSE from Profession prof
 select d.name Dept from Department d join Company c on companyId = c.id where c.name = "Apple";
 
 -- How many female software engineers are making above the average salary at Google?
+select count(p.id) Count from Person p join Employee e on personId = p.id join Profession pf on pf.id = e.professionId where gender = 'F' and pf.name = "Software Engineer" and salary > (select avg(salary) from Employee join Company on companyId = Company.id where name = "Google");
 
 -- How many software engineers are there in San Diego, CA?
+select count(p.id) Count from City cty join HometownAddress ha on cty.id = ha.cityId join Person p on hometownAddressId = ha.id join Employee e on personId = p.id join Profession pf on pf.id = e.professionId where pf.name = "Software Engineer" and cty.name = "San Diego";
 
 -- How many software engineers are there in San Diego, CA working at Google?
-
+select count(p.id) Count from City cty join HometownAddress ha on cty.id = ha.cityId join Person p on hometownAddressId = ha.id join Employee e on personId = p.id join Profession pf on pf.id = e.professionId join Company c on c.id = e.companyId where pf.name = "Software Engineer" and cty.name = "San Diego" and c.name = "Google";
 
 

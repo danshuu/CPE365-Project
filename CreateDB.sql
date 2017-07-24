@@ -48,8 +48,8 @@ CREATE TABLE Person (
    lastName VARCHAR(30) NOT NULL,
    age TINYINT UNSIGNED,
    gender ENUM('M', 'F', 'Other'),
-   addressId INT,
-   CONSTRAINT FKPerson_addressId FOREIGN KEY (addressId)
+   hometownAddressId INT,
+   CONSTRAINT FKPerson_hometownAddressId FOREIGN KEY (hometownAddressId)
     REFERENCES HometownAddress(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
@@ -113,27 +113,6 @@ CREATE TABLE Employee (
     ON DELETE CASCADE
 );
 
-INSERT INTO Person (firstName, lastName, age, gender) VALUES 
-   ('Bob', 'Smith', 21, 'M'), 
-   ('Mary', 'James', 29, 'F'),
-   ('Jane', 'Smith', 45, 'F'),
-   ('Bob', 'James', 18, 'M'),
-   ('Janice', 'Tan', 34, 'Other'),
-   ('Bob', 'Smith', 24, 'M'),
-   ('Red', 'Fire', 29, 'F'), 
-   ('Kobe', 'Bryant', 38, 'M'),
-   ('Janice', 'White', 32, 'F'),
-   ('Michael', 'Jordan', 54, 'M'),
-   ('Lebron', 'James', 32, 'M'),
-   ('Jerry', 'West', 64, 'M'),
-   ('Random', 'Smith', 24, 'Other');
-
-INSERT INTO Profession VALUES
-   (1, "Software Engineer", "Lower"),
-   (2, "Retail Specialist", "Lower"),
-   (3, "Manager", "Upper"),
-   (4, "Phone Operator", "Lower");
-
 INSERT INTO City VALUES
    (1, "Los Angeles", 'CA'),
    (2, "Mountain View", 'CA'),
@@ -142,7 +121,36 @@ INSERT INTO City VALUES
    (5, "Seattle", 'WA'),
    (6, "Austin", 'TX'),
    (7, "Cupertino", 'CA'),
-   (8, "Palo Alto", 'CA');
+   (8, "Palo Alto", 'CA'),
+   (9, "San Diego", 'CA'),
+   (10, "Portland", 'OR');
+
+INSERT INTO HometownAddress VALUES
+   (1, '1111', 'Happy Lane', '93410', NULL, 4),
+   (2, '1121', 'Happy Lane2', '93420', NULL, 9),
+   (3, '1131', 'Happy Lane3', '93430', NULL, 1);
+
+INSERT INTO Person (firstName, lastName, age, gender, hometownAddressId) VALUES 
+   ('Bob', 'Smith', 21, 'M', 1), 
+   ('Mary', 'James', 29, 'F', 1),
+   ('Jane', 'Smith', 45, 'F', 3),
+   ('Bob', 'James', 18, 'M', 1),
+   ('Janice', 'Tan', 34, 'Other', 2),
+   ('Bob', 'Smith', 24, 'M', 1),
+   ('Red', 'Fire', 29, 'F', 2), 
+   ('Kobe', 'Bryant', 38, 'M', 2),
+   ('Janice', 'White', 32, 'F', 2),
+   ('Michael', 'Jordan', 54, 'M', 2),
+   ('Lebron', 'James', 32, 'M', 1),
+   ('Jerry', 'West', 64, 'M', 1),
+   ('Random', 'Smith', 24, 'Other', 3);
+
+INSERT INTO Profession VALUES
+   (1, "Software Engineer", "Lower"),
+   (2, "Retail Specialist", "Lower"),
+   (3, "Manager", "Upper"),
+   (4, "Phone Operator", "Lower");
+
 
 INSERT INTO Company VALUES
    (1, "Google", 1),
@@ -196,7 +204,5 @@ INSERT INTO CompanyXProfession (professionId, companyId)
 
 INSERT INTO Rating VALUES
    (1, 4, 4),
-   (2, 8, 4);
+   (2, 8, 5);
 
-INSERT INTO HometownAddress VALUES
-   (1, '1111', 'Happy Lane', '93410', NULL, 4);
