@@ -5,7 +5,7 @@ select c.name Company, count(p.id) numEmployees
 from Person p join Employee e on p.id = personId join Company c on c.id = companyId 
 group by c.name;
 
--- List 'x' profession in each department of 'y' company
+-- List each department with 'x' profession in 'y' company
 -- ex) list all the departments that software engineers work in at Google.
 select distinct d.name
 from Company c join CompanyXProfession cxp on c.id = cxp.companyId
@@ -132,6 +132,13 @@ WHERE Pro.division = "Lower"
  AND salary >= 15;
 
 -- List of employees who are not living in the same city as their company
+SELECT E.personId, firstName, lastName, Co.name "Company"
+FROM HometownAddress H JOIN Person P
+ON H.id = P.hometownAddressId JOIN Employee E
+ON P.id = E.personId JOIN Department D
+ON E.deptId = D.id JOIN Company Co
+ON D.companyId = Co.id
+ AND H.cityId != Co.cityId;
 
 -------
 
