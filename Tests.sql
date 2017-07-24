@@ -16,15 +16,6 @@ where (p.name = "Software Engineer" and c.name = "Google");
 -- List a count of employees who live in each city at 'x' company
 
 -- List the top five companies with the highest average salary of lower division workers
--- NOT WORKING
-SELECT C.name, AVG(salary)
-FROM Employee E JOIN Department D
-ON deptId = D.id JOIN Company C
-ON companyId = C.id
-GROUP BY C.id
-HAVING E.division = "Lower"
-ORDER BY AVG(salary)
-LIMIT 5;
 
 -- List every city ordered by the highest average salary to the lowest average salary
 
@@ -32,20 +23,20 @@ LIMIT 5;
 -- (x = software engineers)
 select p.name as "Profession", count(*) as "Employee Count", c.name as "Company"
 from Profession p, Company c, Employee e
-where p.id = e.professionId and c.id = e.companyId
-      and p.name = "Software Engineer"
+where p.id = e.professionId 
+ and c.id = e.companyId
+ and p.name = "Software Engineer"
 group by c.name
 order by "Employee Count";
 
-
 -- List the top five companies with the lowest employee ratings on average
--- NOT TESTED
-SELECT C.name, AVG(score)
+-- POSSIBLY WORKS
+SELECT C.name "Company", AVG(score) "score"
 FROM Rating R JOIN Employee E
 ON R.ratedId = E.personId JOIN Department D
-ON deptId = D.id JOIN Company C
-ON companyId = C.id
-GROUP BY C.id
+ON E.deptId = D.id JOIN Company C
+ON D.companyId = C.id
+GROUP BY C.name
 ORDER BY AVG(score) DESC
 LIMIT 5;
 
@@ -56,33 +47,68 @@ select firstName, lastName
 from Person p, Employee e, Rating r
 where p.id = e.personId and r.ratedId = e.personId and (hiredDate < "2015-06-20" and score >= 6);
 
--- List each department in 'x' company that has at least 5 employees hired before 'y' date
--- NOT WORKING
-SELECT D.name
-FROM Company C JOIN Department D
-ON C.id = companyId JOIN Employee E
-ON D.id = deptId
-WHERE C.name = "Google"
- AND (
-    SELECT *
-    FROM Department D JOIN Employee E
-    ON D.id = deptId
-    GROUP BY D.id
-    HAVING 
-)
-ORDER BY D.name;
+-- List company and city where the company has at least 5 employees hired before 'y' date
+-- WORKING
+SELECT Co.name "Company", C.name "City", COUNT(*) "Employee Count"
+FROM Employee E JOIN Department D
+ON deptId = D.id JOIN Company Co
+ON D.companyId = Co.id JOIN City C
+ON cityId = C.id
+WHERE hiredDate < '2016-01-01'
+GROUP BY Co.name, C.name
+HAVING COUNT(*) >= 5;
 
--- List each department in 'x' company that has at least 5 employees with a rating of 'y' or greater
--- NOT WORKING
-SELECT D.name
-FROM Company C JOIN Department D 
-ON C.id = companyId JOIN Employee E 
-ON D.id = deptId JOIN Rating R
-ON E.personId = R.ratedId
-WHERE C.name = "Google"
-GROUP BY D.id
-HAVING COUNT(DISTINCT ratedId) >= 5
- AND R.score >= 7;
+-- List each department in 'x' company that has at least 3 employees with a rating of 'y' or greater
+
+-- List each person and score rated by 'x' rater
+
+-- List each employee with a lower division profession who has not received a rating
+SELECT firstName "First Name", lastName "Last Name", Pro.name "Profession"
+FROM Profession Pro JOIN Employee E 
+ON Pro.id = E.professionId LEFT JOIN Rating R
+ON E.personId = R.ratedId JOIN Person P
+ON E.personId = P.id
+WHERE R.ratedId IS NULL
+ AND Pro.division = 'Lower';
+
+-- List each address and the employees where at least 2 employees from 'x' company have the same address
+SELECT CONCAT(H.addressNumber, " ", H.street, ", ", C.name) "Address", 
+ CONCAT(P1.firstName, " ", P1.lastName) "Employee 1", 
+ CONCAT(P2.firstName, " ", P2.lastName) "Empolyee 2"
+FROM Company Co JOIN Department D
+ON Co.id = companyId JOIN Employee E1
+ON D.id = E1.deptId JOIN Employee E2
+ON D.id = E2.deptId
+ AND E1.personId < E2.personId JOIN Person P1
+ON E1.personId = P1.id JOIN Person P2
+ON E2.personId = P2.id
+ AND P1.hometownAddressId = P2.hometownAddressId JOIN HometownAddress H
+ON P1.hometownAddressId = H.id JOIN City C
+ON H.cityId = C.id
+WHERE Co.name = "Google";
+
+-- List each company, city, and profession where the company offers the profession but has no employees in the profession
+SELECT DISTINCT Co.name "Comapny", C.name "City", P.name "Profession"
+FROM Profession P JOIN CompanyXProfession CXP 
+ON P.id = CXP.professionId JOIN Company Co
+ON CXP.companyId = Co.id JOIN City C
+ON Co.cityId = C.id JOIN Department D
+ON Co.id = D.companyId LEFT JOIN Employee E
+ON D.id = deptId
+ AND CXP.professionId = E.professionId
+WHERE E.professionId IS NULL;
+
+-- List every manager who has not rated an employee
+SELECT P.id, firstName, lastName
+FROM Profession Pro JOIN Employee E
+ON Pro.id = E.professionId JOIN Person P
+ON E.personId = P.id
+WHERE NOT EXISTS (
+   SELECT *
+   FROM Rating R
+   WHERE E.personId = R.raterId
+)
+ AND Pro.name = "Manager";
 
 -------
 
