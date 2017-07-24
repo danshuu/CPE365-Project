@@ -48,7 +48,7 @@ HAVING COUNT(*) >= 5;
 
 -- List each person and score rated by 'x' rater
 
--- List each employee who has not received a rating
+-- List each employee with a lower division profession who has not received a rating
 SELECT firstName "First Name", lastName "Last Name", Pro.name "Profession"
 FROM Profession Pro JOIN Employee E 
 ON Pro.id = E.professionId LEFT JOIN Rating R
@@ -56,8 +56,6 @@ ON E.personId = R.ratedId JOIN Person P
 ON E.personId = P.id
 WHERE R.ratedId IS NULL
  AND Pro.division = 'Lower';
-
--- List each employee with a lower division profession who has not received a rating
 
 -------
 
