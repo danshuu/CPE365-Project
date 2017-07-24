@@ -11,8 +11,8 @@ select c.name Company, count(p.id) numEmployees from Person p join Employee e on
 -- NOT WORKING
 SELECT C.name, AVG(salary)
 FROM Employee E JOIN Department D
-ON deptId = D.id JOIN Company C
-ON companyId = C.id
+ON E.deptId = D.id JOIN Company C
+ON D.companyId = C.id
 GROUP BY C.id
 HAVING E.division = "Lower"
 ORDER BY AVG(salary)
@@ -23,35 +23,43 @@ LIMIT 5;
 -- List the count of 'x' profession at all companies ordered by count of 'x' profession
 
 -- List the top five companies with the lowest employee ratings on average
--- NOT TESTED
-SELECT C.name, AVG(score)
+-- POSSIBLY WORKS
+SELECT C.name "Company", AVG(score) "score"
 FROM Rating R JOIN Employee E
 ON R.ratedId = E.personId JOIN Department D
-ON deptId = D.id JOIN Company C
-ON companyId = C.id
-GROUP BY C.id
+ON E.deptId = D.id JOIN Company C
+ON D.companyId = C.id
+GROUP BY C.name
 ORDER BY AVG(score) DESC
 LIMIT 5;
 
 -- List all employees who were hired before 'x' date and have a rating of 'y' or greater
 
--- List each department in 'x' company that has at least 5 employees hired before 'y' date
+-- List each company and city where the company has at least 5 employees hired before 'y' date
 -- NOT WORKING
-SELECT D.name
-FROM Company C JOIN Department D
-ON C.id = companyId JOIN Employee E
+SELECT *
+FROM City C JOIN Company Co
+ON C.id = cityId JOIN Department D
+ON Co.id = D.companyId JOIN Employee E
 ON D.id = deptId
-WHERE C.name = "Google"
- AND (
-    SELECT *
-    FROM Department D JOIN Employee E
-    ON D.id = deptId
-    GROUP BY D.id
-    HAVING 
-)
-ORDER BY D.name;
+WHERE hiredDate < '2016-01-01'
+ AND Co.name = "Google";
 
--- List each department in 'x' company that has at least 5 employees with a rating of 'y' or greater
+SELECT *
+FROM City C JOIN Company Co
+ON C.id = cityId JOIN Department D
+ON Co.id = D.companyId
+WHERE EXISTS (
+   SELECT *
+   FROM Employee E
+   WHERe hiredDate < '2016-01-01'
+    AND D.id = deptId
+)
+ AND Co.name = "Google";
+GROUP BY C.name, Co.name
+HAVING Co.name = "Google";
+
+-- List each department in 'x' company that has at least 3 employees with a rating of 'y' or greater
 -- NOT WORKING
 SELECT D.name
 FROM Company C JOIN Department D 
@@ -59,9 +67,9 @@ ON C.id = companyId JOIN Employee E
 ON D.id = deptId JOIN Rating R
 ON E.personId = R.ratedId
 WHERE C.name = "Google"
-GROUP BY D.id
-HAVING COUNT(DISTINCT ratedId) >= 5
- AND R.score >= 7;
+
+-- List each person and score rated by 'x' rater
+
 
 -------
 
