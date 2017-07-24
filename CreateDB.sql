@@ -37,7 +37,7 @@ CREATE TABLE HometownAddress (
    zipcode CHAR(5) NOT NULL,
    zipcodeExt CHAR(4),
    cityId INT NOT NULL,
-   CONSTRAINT FKAddress_cityId FOREIGN KEY (cityId)
+   CONSTRAINT FKHometownAddress_cityId FOREIGN KEY (cityId)
     REFERENCES City(id)
     ON UPDATE CASCADE
 );
@@ -95,19 +95,19 @@ CREATE TABLE Employee (
    salary DECIMAL(8, 2) UNSIGNED NOT NULL,
    deptId INT NOT NULL,
    companyId INT NOT NULL,
-   CONSTRAINT FKPersonXProfession_personId FOREIGN KEY (personId)
+   CONSTRAINT FKEmployee_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-   CONSTRAINT FKPersonXProfession_professionId FOREIGN KEY (professionId)
+   CONSTRAINT FKEmployee_professionId FOREIGN KEY (professionId)
     REFERENCES Profession(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-   CONSTRAINT FKPersonXProfession_deptId FOREIGN KEY (deptId)
+   CONSTRAINT FKEmployee_deptId FOREIGN KEY (deptId)
     REFERENCES Department(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-   CONSTRAINT FKPersonXProfession_companyId FOREIGN KEY (companyId)
+   CONSTRAINT FKEmployee_companyId FOREIGN KEY (companyId)
     REFERENCES Company(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
@@ -143,14 +143,14 @@ INSERT INTO Person (firstName, lastName, age, gender, hometownAddressId) VALUES
    ('Michael', 'Jordan', 54, 'M', 2),
    ('Lebron', 'James', 32, 'M', 1),
    ('Jerry', 'West', 64, 'M', 1),
-   ('Random', 'Smith', 24, 'Other', 3);
+   ('Random', 'Smith', 24, 'Other', 3),
+   ('Boss', 'Big', 30, 'F', 3);
 
 INSERT INTO Profession VALUES
    (1, "Software Engineer", "Lower"),
    (2, "Retail Specialist", "Lower"),
    (3, "Manager", "Upper"),
    (4, "Phone Operator", "Lower");
-
 
 INSERT INTO Company VALUES
    (1, "Google", 1),
@@ -196,13 +196,15 @@ INSERT INTO Employee VALUES
    (10, 3, '2012-01-24', 18.00, 8, 10),
    (11, 3, '2015-06-07', 30.00, 2, 3),
    (12, 4, '2016-01-24', 18.00, 1, 10),
-   (13, 1, '2012-01-24', 14.00, 10, 7);
+   (13, 1, '2012-01-24', 14.00, 10, 7),
+   (14, 3, '2015-02-12', 25.30, 10, 7);
 
 INSERT INTO CompanyXProfession (professionId, companyId) 
 (select distinct e.professionId, e.companyId from Employee e order by companyId);
    
-
 INSERT INTO Rating VALUES
    (1, 4, 4),
+   (2, 8, 4),
+   (13, 5, 14),
+   (9, 9, 14),
    (2, 8, 5);
-
