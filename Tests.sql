@@ -123,6 +123,8 @@ ON E.professionId = Pro.id
 WHERE Pro.division = "Lower"
  AND salary >= 15;
 
+-- List of employees who are not living in the same city as their company
+
 -------
 
 -- How many software engineers are at Google?
