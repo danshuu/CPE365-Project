@@ -20,7 +20,15 @@ LIMIT 5;
 
 -- List every city ordered by the highest average salary to the lowest average salary
 
--- List the count of 'x' profession at all companies ordered by count of 'x' profession
+-- List the profession name and the count of 'x' profession at all companies ordered by count of 'x' profession
+-- (x = software engineers)
+select p.name as "Profession", count(*) as "Employee Count", c.name as "Company"
+from Profession p, Company c, Employee e
+where p.id = e.professionId and c.id = e.companyId
+      and p.name = "Software Engineer"
+group by c.name
+order by "Employee Count";
+
 
 -- List the top five companies with the lowest employee ratings on average
 -- NOT TESTED
@@ -34,6 +42,11 @@ ORDER BY AVG(score) DESC
 LIMIT 5;
 
 -- List all employees who were hired before 'x' date and have a rating of 'y' or greater
+-- (x = June 20th 2015)
+-- (y = 6)
+select firstName, lastName
+from Person p, Employee e, Rating r
+where p.id = e.personId and r.ratedId = e.personId and (hiredDate < "2015-06-20" and score >= 6);
 
 -- List each department in 'x' company that has at least 5 employees hired before 'y' date
 -- NOT WORKING
