@@ -12,6 +12,13 @@ select c.name Company, count(p.id) numEmployees from Person p join Employee e on
 -- List every city ordered by the highest average salary to the lowest average salary
 
 -- List the count of 'x' profession at all companies ordered by count of 'x' profession
+SELECT Co.name "Company", COUNT(*) "Managers"
+FROM Company Co JOIN Department D
+ON Co.id = companyId JOIN Employee E
+ON D.id = deptId JOIN Profession P
+ON E.professionId = P.id
+WHERE P.name = "Manager"
+GROUP BY Co.name;
 
 -- List the top five companies with the lowest employee ratings on average
 -- POSSIBLY WORKS
