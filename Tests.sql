@@ -66,11 +66,13 @@ HAVING COUNT(DISTINCT ratedId) >= 5
 -------
 
 -- How many software engineers are at Google?
+select c.name Company, count(e.personId) numSE from Profession prof join Employee e on e.professionId = prof.id join Company c on companyId = c.id where prof.name = "Software Engineer" group by Company;
 
--- How many software engineers at Google are females under the age of 26 hired before
--- hired before June 1, 1998?
+-- How many software engineers at Google are females under the age of 26 hired before June 1, 1998?
+select c.name Company, p.firstName, count(e.personId) numSE from Profession prof join Employee e on e.professionId = prof.id join Person p on p.id = e.personId join Company c on companyId = c.id where prof.name = "Software Engineer" and p.gender = 'F' and p.age > 26 and c.name = "Google" and e.hiredDate < "1998-06-01";
 
--- list the departments at Amazon.
+-- list the departments at Apple.
+select d.name Dept from Department d join Company c on companyId = c.id where c.name = "Apple";
 
 -- How many female software engineers are making above the average salary at Google?
 
