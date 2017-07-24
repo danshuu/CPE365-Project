@@ -60,7 +60,12 @@ HAVING COUNT(*) >= 5;
 
 -- List each department in 'x' company that has at least 3 employees with a rating of 'y' or greater
 
--- List each person and score rated by 'x' rater
+-- List each employee and score rated by 'x' rater
+SELECT firstName, lastName, score
+FROM Person P JOIN Employee E 
+ON P.id = E.personId JOIN Rating R
+ON E.personId = R.ratedId
+WHERE R.raterId = 14;
 
 -- List each employee with a lower division profession who has not received a rating
 SELECT firstName "First Name", lastName "Last Name", Pro.name "Profession"
