@@ -57,6 +57,23 @@ ON E.personId = P.id
 WHERE R.ratedId IS NULL
  AND Pro.division = 'Lower';
 
+-- List each address and the employees where at least 2 employees from 'x' company have the same address
+SELECT CONCAT(H.addressNumber, " ", H.street, ", ", C.name) "Address", 
+ CONCAT(P1.firstName, " ", P1.lastName) "Employee 1", 
+ CONCAT(P2.firstName, " ", P2.lastName) "Empolyee 2"
+FROM Company Co JOIN Department D
+ON Co.id = companyId JOIN Employee E1
+ON D.id = E1.deptId JOIN Employee E2
+ON D.id = E2.deptId
+ AND E1.personId < E2.personId JOIN Person P1
+ON E1.personId = P1.id JOIN Person P2
+ON E2.personId = P2.id
+ AND P1.hometownAddressId = P2.hometownAddressId JOIN HometownAddress H
+ON P1.hometownAddressId = H.id JOIN City C
+ON H.cityId = C.id
+WHERE Co.name = "Google";
+
+
 -------
 
 -- How many software engineers are at Google?
