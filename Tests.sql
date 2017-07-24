@@ -74,17 +74,21 @@ WHERE C.name = "Google"
 -------
 
 -- How many software engineers are at Google?
+select c.name Company, count(e.personId) numSE from Profession prof join Employee e on e.professionId = prof.id join Company c on companyId = c.id where prof.name = "Software Engineer" group by Company;
 
--- How many software engineers at Google are females under the age of 26 hired before
--- hired before June 1, 1998?
+-- How many software engineers at Google are females under the age of 26 hired before June 1, 1998?
+select c.name Company, p.firstName, count(e.personId) numSE from Profession prof join Employee e on e.professionId = prof.id join Person p on p.id = e.personId join Company c on companyId = c.id where prof.name = "Software Engineer" and p.gender = 'F' and p.age > 26 and c.name = "Google" and e.hiredDate < "1998-06-01";
 
--- list the departments at Amazon.
+-- list the departments at Apple.
+select d.name Dept from Department d join Company c on companyId = c.id where c.name = "Apple";
 
 -- How many female software engineers are making above the average salary at Google?
+select count(p.id) Count from Person p join Employee e on personId = p.id join Profession pf on pf.id = e.professionId where gender = 'F' and pf.name = "Software Engineer" and salary > (select avg(salary) from Employee join Company on companyId = Company.id where name = "Google");
 
 -- How many software engineers are there in San Diego, CA?
+select count(p.id) Count from City cty join HometownAddress ha on cty.id = ha.cityId join Person p on hometownAddressId = ha.id join Employee e on personId = p.id join Profession pf on pf.id = e.professionId where pf.name = "Software Engineer" and cty.name = "San Diego";
 
 -- How many software engineers are there in San Diego, CA working at Google?
-
+select count(p.id) Count from City cty join HometownAddress ha on cty.id = ha.cityId join Person p on hometownAddressId = ha.id join Employee e on personId = p.id join Profession pf on pf.id = e.professionId join Company c on c.id = e.companyId where pf.name = "Software Engineer" and cty.name = "San Diego" and c.name = "Google";
 
 
