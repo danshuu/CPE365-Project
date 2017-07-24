@@ -79,7 +79,7 @@ WHERE R.ratedId IS NULL
 -- List each address and the employees where at least 2 employees from 'x' company have the same address
 SELECT CONCAT(H.addressNumber, " ", H.street, ", ", C.name) "Address", 
  CONCAT(P1.firstName, " ", P1.lastName) "Employee 1", 
- CONCAT(P2.firstName, " ", P2.lastName) "Empolyee 2"
+ CONCAT(P2.firstName, " ", P2.lastName) "Employee 2"
 FROM Company Co JOIN Department D
 ON Co.id = companyId JOIN Employee E1
 ON D.id = E1.deptId JOIN Employee E2
@@ -93,7 +93,7 @@ ON H.cityId = C.id
 WHERE Co.name = "Google";
 
 -- List each company, city, and profession where the company offers the profession but has no employees in the profession
-SELECT DISTINCT Co.name "Comapny", C.name "City", P.name "Profession"
+SELECT DISTINCT Co.name "Company", C.name "City", P.name "Profession"
 FROM Profession P JOIN CompanyXProfession CXP 
 ON P.id = CXP.professionId JOIN Company Co
 ON CXP.companyId = Co.id JOIN City C

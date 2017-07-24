@@ -39,7 +39,8 @@ CREATE TABLE HometownAddress (
    cityId INT NOT NULL,
    CONSTRAINT FKHometownAddress_cityId FOREIGN KEY (cityId)
     REFERENCES City(id)
-    ON UPDATE CASCADE
+    ON UPDATE CASCADE,
+   UNIQUE KEY UKaddressNumber_street_zipcode_cityId (addressNumber, street, zipcode, cityId)
 );
 
 CREATE TABLE Person (
@@ -49,6 +50,7 @@ CREATE TABLE Person (
    age TINYINT UNSIGNED,
    gender ENUM('M', 'F', 'Other'),
    hometownAddressId INT,
+   INDEX INage (age),
    CONSTRAINT FKPerson_hometownAddressId FOREIGN KEY (hometownAddressId)
     REFERENCES HometownAddress(id)
     ON UPDATE CASCADE
@@ -85,7 +87,8 @@ CREATE TABLE CompanyXProfession (
    CONSTRAINT FKPersonXCompany_companyId FOREIGN KEY (companyId)
     REFERENCES Company(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+   UNIQUE KEY UKprofessionId_companyId(professionId, companyId)
 );
 
 CREATE TABLE Employee (
@@ -95,6 +98,8 @@ CREATE TABLE Employee (
    salary DECIMAL(8, 2) UNSIGNED NOT NULL,
    deptId INT NOT NULL,
    companyId INT NOT NULL,
+   INDEX INsalary (salary),
+   INDEX INhiredDate (hiredDate),
    CONSTRAINT FKEmployee_personId FOREIGN KEY (personId)
     REFERENCES Person(id)
     ON UPDATE CASCADE
@@ -110,7 +115,8 @@ CREATE TABLE Employee (
    CONSTRAINT FKEmployee_companyId FOREIGN KEY (companyId)
     REFERENCES Company(id)
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
+   UNIQUE KEY UKpersonId (personId)
 );
 
 INSERT INTO City VALUES
