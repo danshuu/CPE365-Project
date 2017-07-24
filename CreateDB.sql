@@ -57,7 +57,8 @@ CREATE TABLE Person (
 
 CREATE TABLE Profession (
    id INT PRIMARY KEY AUTO_INCREMENT,
-   name VARCHAR(30) NOT NULL
+   name VARCHAR(30) NOT NULL,
+   division ENUM('Upper', 'Lower') NOT NULL
 );
 
 CREATE TABLE Rating (
@@ -74,11 +75,23 @@ CREATE TABLE Rating (
     ON DELETE CASCADE
 );
 
+CREATE TABLE CompanyXProfession (
+   professionId INT NOT NULL,
+   companyId INT NOT NULL, 
+   CONSTRAINT FKPersonXCompany_professionId FOREIGN KEY (professionId)
+    REFERENCES Profession(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+   CONSTRAINT FKPersonXCompany_companyId FOREIGN KEY (companyId)
+    REFERENCES Company(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+);
+
 CREATE TABLE Employee (
    personId INT NOT NULL,
    professionId INT NOT NULL,
    hiredDate DATE NOT NULL,
-   division ENUM('Upper', 'Lower') NOT NULL,
    salary DECIMAL(8, 2) UNSIGNED NOT NULL,
    deptId INT NOT NULL,
    companyId INT NOT NULL,
@@ -116,10 +129,10 @@ INSERT INTO Person (firstName, lastName, age, gender) VALUES
    ('Random', 'Smith', 24, 'Other');
 
 INSERT INTO Profession VALUES
-   (1, "Software Engineer"),
-   (2, "Retail Specialist"),
-   (3, "Manager"),
-   (4, "Phone Operator");
+   (1, "Software Engineer", "Lower"),
+   (2, "Retail Specialist", "Lower"),
+   (3, "Manager", "Upper"),
+   (4, "Phone Operator", "Lower");
 
 INSERT INTO City VALUES
    (1, "Los Angeles", 'CA'),
@@ -162,20 +175,23 @@ INSERT INTO Department VALUES
    (16, "Window Cleaning", 10);
 
 INSERT INTO Employee VALUES
-   (1, 1, '2014-04-04', 'Upper', 15.50, 1, 3),
-   (2, 1, '2015-06-07', 'Upper', 20.00, 1, 9),
-   (3, 3, '2015-06-07', 'Upper', 30.00, 2, 6),
-   (4, 4, '2016-01-24', 'Lower', 18.00, 1, 2),
-   (5, 1, '2012-01-24', 'Lower', 14.00, 10, 2),
-   (6, 3, '2012-01-24', 'Upper', 18.00, 8, 9),
+   (1, 1, '2014-04-04', 15.50, 1, 3),
+   (2, 1, '2015-06-07', 20.00, 1, 9),
+   (3, 3, '2015-06-07', 30.00, 2, 6),
+   (4, 4, '2016-01-24', 18.00, 1, 2),
+   (5, 1, '2012-01-24', 14.00, 10, 2),
+   (6, 3, '2012-01-24', 18.00, 8, 9),
    
-   (7, 1, '2015-06-07', 'Upper', 30.00, 2, 3),
-   (8, 4, '2016-01-24', 'Lower', 18.00, 1, 10),
-   (9, 1, '2012-01-24', 'Lower', 14.00, 10, 1),
-   (10, 3, '2012-01-24', 'Upper', 18.00, 8, 10),
-   (11, 3, '2015-06-07', 'Upper', 30.00, 2, 3),
-   (12, 4, '2016-01-24', 'Lower', 18.00, 1, 10),
-   (13, 1, '2012-01-24', 'Lower', 14.00, 10, 7);
+   (7, 1, '2015-06-07', 30.00, 2, 3),
+   (8, 4, '2016-01-24', 18.00, 1, 10),
+   (9, 1, '2012-01-24', 14.00, 10, 1),
+   (10, 3, '2012-01-24', 18.00, 8, 10),
+   (11, 3, '2015-06-07', 30.00, 2, 3),
+   (12, 4, '2016-01-24', 18.00, 1, 10),
+   (13, 1, '2012-01-24', 14.00, 10, 7);
+
+INSERT INTO CompanyXProfession (professionId, companyId) 
+(select distinct e.professionId, e.companyId from Employee e order by companyId);
    
 
 INSERT INTO Rating VALUES
