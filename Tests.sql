@@ -14,7 +14,7 @@ from Company c join CompanyXProfession cxp on c.id = cxp.companyId
 where (p.name = "Software Engineer" and c.name = "Google");
 
 -- List a count of employees who live in each city at 'x' company
--- re-worde: list the total number of employees from their homewtowns who work at google
+-- re-word: list the total number of employees from their homewtowns who work at google
 -- i.e a count of 4 employees from Los Angeles that work at Google. and 3 from SD that work at Google.. etc.
 
 select count(*) as "Num Employees from:", c.name as "City:", co.name "Working at:"
