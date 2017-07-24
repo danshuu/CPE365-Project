@@ -115,6 +115,14 @@ WHERE NOT EXISTS (
 )
  AND Pro.name = "Manager";
 
+-- List all lower division employees with a salary greater than or equal to 15.00
+SELECT P.id, firstName, lastName, salary
+FROM Person P JOIN Employee E
+ON P.id = E.personId JOIN Profession Pro
+ON E.professionId = Pro.id
+WHERE Pro.division = "Lower"
+ AND salary >= 15;
+
 -------
 
 -- How many software engineers are at Google?
