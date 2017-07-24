@@ -90,6 +90,18 @@ ON D.id = deptId
  AND CXP.professionId = E.professionId
 WHERE E.professionId IS NULL;
 
+-- List every manager who has not rated an employee
+SELECT P.id, firstName, lastName
+FROM Profession Pro JOIN Employee E
+ON Pro.id = E.professionId JOIN Person P
+ON E.personId = P.id
+WHERE NOT EXISTS (
+   SELECT *
+   FROM Rating R
+   WHERE E.personId = R.raterId
+)
+ AND Pro.name = "Manager";
+
 -------
 
 -- How many software engineers are at Google?
