@@ -73,6 +73,16 @@ ON P1.hometownAddressId = H.id JOIN City C
 ON H.cityId = C.id
 WHERE Co.name = "Google";
 
+-- List each company, city, and profession where the company offers the profession but has no employees in the profession
+SELECT DISTINCT Co.name "Comapny", C.name "City", P.name "Profession"
+FROM Profession P JOIN CompanyXProfession CXP 
+ON P.id = CXP.professionId JOIN Company Co
+ON CXP.companyId = Co.id JOIN City C
+ON Co.cityId = C.id JOIN Department D
+ON Co.id = D.companyId LEFT JOIN Employee E
+ON D.id = deptId
+ AND CXP.professionId = E.professionId
+WHERE E.professionId IS NULL;
 
 -------
 
