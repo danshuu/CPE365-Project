@@ -14,6 +14,14 @@ from Company c join CompanyXProfession cxp on c.id = cxp.companyId
 where (p.name = "Software Engineer" and c.name = "Google");
 
 -- List a count of employees who live in each city at 'x' company
+-- re-word: list the total number of employees from their homewtowns who work at google
+-- i.e a count of 4 employees from Los Angeles that work at Google. and 3 from SD that work at Google.. etc.
+
+select count(*) as "Num Employees from:", c.name as "City:", co.name "Working at:"
+from Employee e, Person p, HometownAddress h, City c, Company co 
+where p.id = e.personId and h.id = p.hometownAddressId and c.id = h.cityId and e.companyId = co.id
+      and co.name = "Google"
+group by c.name;
 
 -- List the top five companies with the highest average salary of lower division workers
 
