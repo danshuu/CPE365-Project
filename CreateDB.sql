@@ -143,7 +143,8 @@ INSERT INTO Person (firstName, lastName, age, gender, hometownAddressId) VALUES
    ('Michael', 'Jordan', 54, 'M', 2),
    ('Lebron', 'James', 32, 'M', 1),
    ('Jerry', 'West', 64, 'M', 1),
-   ('Random', 'Smith', 24, 'Other', 3);
+   ('Random', 'Smith', 24, 'Other', 3),
+   ('Boss', 'Big', 30, 'F', 3);
 
 INSERT INTO Profession VALUES
    (1, "Software Engineer", "Lower"),

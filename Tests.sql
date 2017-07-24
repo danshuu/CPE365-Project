@@ -8,15 +8,6 @@ select c.name Company, count(p.id) numEmployees from Person p join Employee e on
 -- List a count of employees who live in each city at 'x' company
 
 -- List the top five companies with the highest average salary of lower division workers
--- NOT WORKING
-SELECT C.name, AVG(salary)
-FROM Employee E JOIN Department D
-ON E.deptId = D.id JOIN Company C
-ON D.companyId = C.id
-GROUP BY C.id
-HAVING E.division = "Lower"
-ORDER BY AVG(salary)
-LIMIT 5;
 
 -- List every city ordered by the highest average salary to the lowest average salary
 
@@ -35,41 +26,31 @@ LIMIT 5;
 
 -- List all employees who were hired before 'x' date and have a rating of 'y' or greater
 
--- List each company and city where the company has at least 5 employees hired before 'y' date
--- NOT WORKING
-SELECT *
-FROM City C JOIN Company Co
-ON C.id = cityId JOIN Department D
-ON Co.id = D.companyId JOIN Employee E
-ON D.id = deptId
+-- List company and city where the company has at least 5 employees hired before 'y' date
+-- WORKING
+SELECT Co.name "Company", C.name "City", COUNT(*) "Employee Count"
+FROM Employee E JOIN Department D
+ON deptId = D.id JOIN Company Co
+ON D.companyId = Co.id JOIN City C
+ON cityId = C.id
 WHERE hiredDate < '2016-01-01'
- AND Co.name = "Google";
-
-SELECT *
-FROM City C JOIN Company Co
-ON C.id = cityId JOIN Department D
-ON Co.id = D.companyId
-WHERE EXISTS (
-   SELECT *
-   FROM Employee E
-   WHERe hiredDate < '2016-01-01'
-    AND D.id = deptId
-)
- AND Co.name = "Google";
-GROUP BY C.name, Co.name
-HAVING Co.name = "Google";
+GROUP BY Co.name, C.name
+HAVING COUNT(*) >= 5;
 
 -- List each department in 'x' company that has at least 3 employees with a rating of 'y' or greater
--- NOT WORKING
-SELECT D.name
-FROM Company C JOIN Department D 
-ON C.id = companyId JOIN Employee E 
-ON D.id = deptId JOIN Rating R
-ON E.personId = R.ratedId
-WHERE C.name = "Google"
 
 -- List each person and score rated by 'x' rater
 
+-- List each employee who has not received a rating
+SELECT firstName "First Name", lastName "Last Name", Pro.name "Profession"
+FROM Profession Pro JOIN Employee E 
+ON Pro.id = E.professionId LEFT JOIN Rating R
+ON E.personId = R.ratedId JOIN Person P
+ON E.personId = P.id
+WHERE R.ratedId IS NULL
+ AND Pro.division = 'Lower';
+
+-- List each employee with a lower division profession who has not received a rating
 
 -------
 
