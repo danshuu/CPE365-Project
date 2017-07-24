@@ -68,7 +68,12 @@ HAVING COUNT(*) >= 5;
 
 -- List each department in 'x' company that has at least 3 employees with a rating of 'y' or greater
 
--- List each person and score rated by 'x' rater
+-- List each employee and score rated by 'x' rater
+SELECT firstName, lastName, score
+FROM Person P JOIN Employee E 
+ON P.id = E.personId JOIN Rating R
+ON E.personId = R.ratedId
+WHERE R.raterId = 14;
 
 -- List each employee with a lower division profession who has not received a rating
 SELECT firstName "First Name", lastName "Last Name", Pro.name "Profession"
@@ -82,7 +87,7 @@ WHERE R.ratedId IS NULL
 -- List each address and the employees where at least 2 employees from 'x' company have the same address
 SELECT CONCAT(H.addressNumber, " ", H.street, ", ", C.name) "Address", 
  CONCAT(P1.firstName, " ", P1.lastName) "Employee 1", 
- CONCAT(P2.firstName, " ", P2.lastName) "Empolyee 2"
+ CONCAT(P2.firstName, " ", P2.lastName) "Employee 2"
 FROM Company Co JOIN Department D
 ON Co.id = companyId JOIN Employee E1
 ON D.id = E1.deptId JOIN Employee E2
@@ -96,7 +101,7 @@ ON H.cityId = C.id
 WHERE Co.name = "Google";
 
 -- List each company, city, and profession where the company offers the profession but has no employees in the profession
-SELECT DISTINCT Co.name "Comapny", C.name "City", P.name "Profession"
+SELECT DISTINCT Co.name "Company", C.name "City", P.name "Profession"
 FROM Profession P JOIN CompanyXProfession CXP 
 ON P.id = CXP.professionId JOIN Company Co
 ON CXP.companyId = Co.id JOIN City C
@@ -117,6 +122,14 @@ WHERE NOT EXISTS (
    WHERE E.personId = R.raterId
 )
  AND Pro.name = "Manager";
+
+-- List all lower division employees with a salary greater than or equal to 15.00
+SELECT P.id, firstName, lastName, salary
+FROM Person P JOIN Employee E
+ON P.id = E.personId JOIN Profession Pro
+ON E.professionId = Pro.id
+WHERE Pro.division = "Lower"
+ AND salary >= 15;
 
 -------
 
