@@ -177,8 +177,3 @@ ON E.deptId = D.id JOIN Company Co
 ON D.companyId = Co.id
  AND H.cityId != Co.cityId;
 
--- List the top five companies with the highest average salary of lower division workers
-
--- List each department in 'x' company that has at least 3 employees with a rating of 'y' or greater
-
-
