@@ -365,5 +365,7 @@ public class DataGen {
       finally {
          closeEm(cnc);
       }
+
+      System.out.println("Done!");
    }
 }
