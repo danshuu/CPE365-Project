@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DataGen {
 
@@ -11,6 +12,10 @@ public class DataGen {
     private static final int NUM_RATING = 80000;
     private static final int NUM_COMPANY = 4000;
     private static final int NUM_DEPARTMENT = 4000;
+    private static final int MIN_AGE = 18;
+    private static final int MAX_AGE = 60;
+    private static final double MIN_PAY = 13.00;
+    private static final double MAX_PAY = 45.00;
 
 	public static void genCity(Connection cnc) {
        ResultSet rst = null;
@@ -35,6 +40,7 @@ public class DataGen {
 	public static void genHometownAddress(Connection cnc) {
        ResultSet rst = null;
        PreparedStatement pStm = null;
+       int random;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
@@ -42,10 +48,17 @@ public class DataGen {
            "values (?, ?, ?, ?)");
 
           for (int i = 1; i < NUM_ADDRESS; i++) {
-             pStm.setString(1, String.format("%d", (i % 100000) + 1));
+          	 random = ThreadLocalRandom.current().nextInt(1, 100000);
+             pStm.setString(1, random);
+
              pStm.setString(2, String.format("Street%d", i ));
-             pStm.setString(3, String.format("%d", (i % 100000) + 1));
-             pStm.setInt(4, );
+
+             random = ThreadLocalRandom.current().nextInt(1, 100000);
+             pStm.setString(3, String.format("%d", random);
+
+             random = ThreadLocalRandom.current().nextInt(1, NUM_CITY + 1);
+             pStm.setInt(4, random);
+
              pStm.executeUpdate();
           }
        }
@@ -57,6 +70,7 @@ public class DataGen {
 	public static void genPerson(Connection cnc) {
 	   ResultSet rst = null;
        PreparedStatement pStm = null;
+       int random;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
@@ -66,6 +80,15 @@ public class DataGen {
           for (int i = 1; i < NUM_PERSON; i++) {
              pStm.setString(1, String.format("First%d", i));
              pStm.setString(2, String.format("Last%d", i));
+
+             random = ThreadLocalRandom.current().nextInt(MIN_AGE, MAX_AGE + 1);
+             pStm.setInt(3, random);
+
+             pStm.setString(4, );
+
+             random = ThreadLocalRandom.current().nextInt(1, NUM_ADDRESS);
+             pStm.setInt(5, random);
+
              pStm.executeUpdate();
           }
        }
@@ -78,6 +101,7 @@ public class DataGen {
 	public static void genProfession(Connection cnc) {
        ResultSet rst = null;
        PreparedStatement pStm = null;
+       int random;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
@@ -85,8 +109,9 @@ public class DataGen {
            "values (?, ?)");
 
           for (int i = 1; i < NUM_PROFESSION; i++) {
+          	 random = ThreadLocalRandom.current().nextInt(1, 2 + 1);
              pStm.setString(1, String.format("Profession%d", i));
-             pStm.setString(2, );
+             pStm.setString(2, random);
              pStm.executeUpdate();
           }
        }
@@ -106,7 +131,7 @@ public class DataGen {
 
           for (int i = 1; i < NUM_COMPANY; i++) {
              pStm.setString(1, String.format("Company%d", i));
-             pStm.setInt(2, );
+             pStm.setInt(2, (i % NUM_CITY) + 1);
              pStm.executeUpdate();
           }
        }
@@ -138,6 +163,7 @@ public class DataGen {
 	public static void genEmployee(Connection cnc) {
        ResultSet rst = null;
        PreparedStatement pStm = null;
+       int random;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
@@ -145,10 +171,16 @@ public class DataGen {
            "deptId, companyId) values (?, ?, ?, ?, ?, ?)");
 
           for (int i = 1; i < NUM_EMPLOYEE; i++) {
-             pStm.setInt(1, );
-             pStm.setInt(2, );
+             pStm.setInt(1, i);
+
+             random = ThreadLocalRandom.current().nextInt(1, NUM_PROFESSION);
+             pStm.setInt(2, random);
+
              pStm.setDate(3, );
-             pStm.setFloat(4, );
+
+             random = ThreadLocalRandom.current().nextDouble(MIN_PAY, MAX_PAY + 1);
+             pStm.setFloat(4, random);
+
              pStm.setInt(5, );
              pStm.setInt(6, );
              pStm.executeUpdate();
@@ -191,6 +223,14 @@ public class DataGen {
           cnc = DriverManager.getConnection(args[0], args[1], args[2]);
 
           genCity(cnc);
+          genHometownAddress(cnc);
+          genPerson(cnc);
+          genProfession(cnc);
+          genCompany(cnc);
+          genDepartment(cnc);
+          genEmployee(cnc);
+          genCompanyXProfession(cnc);
+          genRating(cnc);
 	   }
 	   catch (SQLException err) {
           System.out.println(err.getMessage());
