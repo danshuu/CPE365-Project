@@ -12,7 +12,7 @@ select distinct d.name
 from Company c join CompanyXProfession cxp on c.id = cxp.companyId
      join Profession p on p.id = cxp.professionId
      join Department d on d.companyId = c.id
-WHERE (p.name = "Software Engineer" and c.name = "Google");
+WHERE (p.name = "Profession1" and c.name = "Company1");
 
 -- 3. List a count of employees who live in each city at 'x' company
 -- re-word: list the total number of employees from their homewtowns who work at google
@@ -21,7 +21,7 @@ WHERE (p.name = "Software Engineer" and c.name = "Google");
 select count(*) as "Num Employees from:", c.name as "City:", co.name "Working at:"
 from Employee e, Person p, HometownAddress h, City c, Company co 
 WHERE p.id = e.personId and h.id = p.hometownAddressId and c.id = h.cityId and e.companyId = co.id
-      and co.name = "Google"
+      and co.name = "Company700"
 group by c.name;
 
 -- 4. List every hometown city ordered by the highest average salary to the lowest average salary
@@ -37,7 +37,7 @@ select p.name as "Profession", count(*) as "Employee Count", c.name as "Company"
 from Profession p, Company c, Employee e
 WHERE p.id = e.professionId 
  and c.id = e.companyId
- and p.name = "Software Engineer"
+ and p.name = "Profession49"
 group by c.name
 order by "Employee Count";
 
@@ -68,14 +68,15 @@ ON E.companyId = Co.id JOIN City C
 ON cityId = C.id
 WHERE hiredDate < '2000-01-01'
 GROUP BY Co.name, C.name
-HAVING COUNT(*) >= 5;
+HAVING COUNT(*) >= 15;
 
 -- 9. List each employee and score rated by 'x' rater
+-- Myabe
 SELECT firstName, lastName, score
 FROM Person P JOIN Employee E 
 ON P.id = E.personId JOIN Rating R
 ON E.personId = R.ratedId
-WHERE R.raterId = 84933;
+WHERE R.raterId = 105293;
 
 -- 10. List each employee with a lower division profession who has not received a rating
 SELECT firstName "First Name", lastName "Last Name", Pro.name "Profession"
@@ -102,17 +103,6 @@ ON P1.hometownAddressId = H.id JOIN City C
 ON H.cityId = C.id
 WHERE Co.name = "Company1";
 
--- 12. List each company, city, and profession where the company offers the profession but has no employees in the profession
-SELECT DISTINCT Co.name "Company", C.name "City", P.name "Profession"
-FROM Profession P JOIN CompanyXProfession CXP 
-ON P.id = CXP.professionId JOIN Company Co
-ON CXP.companyId = Co.id JOIN City C
-ON Co.cityId = C.id JOIN Department D
-ON Co.id = D.companyId LEFT JOIN Employee E
-ON D.id = deptId
- AND CXP.professionId = E.professionId
-WHERE E.professionId IS NULL;
-
 -- 13. List every manager who has not rated an employee
 SELECT P.id, firstName, lastName
 FROM Profession Pro JOIN Employee E
@@ -137,36 +127,36 @@ WHERE Pro.division = "Lower"
 select c.name Company, count(e.personId) numSE 
 from Profession prof join Employee e on e.professionId = prof.id 
 join Company c on companyId = c.id 
-where prof.name = "Software Engineer" 
+where prof.name = "Profession550" 
 group by Company;
 
 -- 16. How many software engineers at Google are females under the age of 26 hired before June 1, 1998?
-select  c.name Company, p.firstName, count(e.personId) numSE 
+select c.name Company, count(e.personId) numSE 
 from Profession prof join Employee e on e.professionId = prof.id join Person p on p.id = e.personId join Company c on companyId = c.id 
-where prof.name = "Software Engineer" and p.gender = 'F' and p.age > 26 and c.name = "Google" and e.hiredDate < "1998-06-01";
+where prof.name = "Profession300" and p.gender = 'F' and p.age < 26 and c.name = "Company1" and e.hiredDate < "2012-06-01";
 
 -- 17. list the departments at Apple.
 select d.name Dept 
 from Department d join Company c on companyId = c.id 
-where c.name = "Apple";
+where c.name = "Company900";
 
 -- 18. How many female software engineers are making above the average salary at Google?
 select count(p.id) Count 
 from Person p join Employee e on personId = p.id join Profession pf on pf.id = e.professionId 
-where gender = 'F' and pf.name = "Software Engineer" 
-      and salary > (select avg(salary) from Employee join Company on companyId = Company.id where name = "Google");
+where gender = 'F' and pf.name = "Profession400" 
+      and salary > (select avg(salary) from Employee join Company on companyId = Company.id where name = "Company400");
 
 -- 19. How many software engineers are there in San Diego, CA?
 select count(p.id) Count 
 from City cty join HometownAddress ha on cty.id = ha.cityId join Person p on hometownAddressId = ha.id 
      join Employee e on personId = p.id join Profession pf on pf.id = e.professionId 
-where pf.name = "Software Engineer" and cty.name = "San Diego";
+where pf.name = "Profession1" and cty.name = "City11";
 
 -- 20 How many software engineers are there in San Diego, CA working at Google?
 select count(p.id) Count 
 from City cty join HometownAddress ha on cty.id = ha.cityId join Person p on hometownAddressId = ha.id 
      join Employee e on personId = p.id join Profession pf on pf.id = e.professionId join Company c on c.id = e.companyId 
-where pf.name = "Software Engineer" and cty.name = "San Diego" and c.name = "Google";
+where pf.name = "Profession1" and cty.name = "City11" and c.name = "Company12";
 
 -- 21. List of employees who are not living in the same city as their company
 SELECT E.personId, firstName, lastName, Co.name "Company"
