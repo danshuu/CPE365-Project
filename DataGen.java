@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,6 +14,7 @@ public class DataGen {
    private static final int NUM_RATING = 80000;
    private static final int NUM_COMPANY = 4000;
    private static final int MAX_DEPT_PER_COMPANY = 10;
+
    private static final int MIN_AGE = 18;
    private static final int MAX_AGE = 60;
    private static final double MIN_PAY = 13.00;
@@ -46,19 +46,22 @@ public class DataGen {
 
    public static void genCity(Connection cnc) throws SQLException {
       PreparedStatement pStm = null;
-      int random;
+      StringBuilder statement;
+      int randCity;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "City(name, state) " +
-                 "values (?, ?)");
+         statement = new StringBuilder("insert into City(name, state) values ");
 
          for (int i = 1; i <= NUM_CITY; i++) {
-            random = ThreadLocalRandom.current().nextInt(1, NUM_STATES + 1);
-            pStm.setString(1, String.format("City%d", i));
-            pStm.setString(2, String.format("%02d", random));
-            pStm.executeUpdate();
+            randCity = ThreadLocalRandom.current().nextInt(1, NUM_STATES + 1);
+            statement.append(String.format("('City%d', '%02d')", i, randCity));
+
+            if(i != NUM_CITY) {statement.append(", ");}
+            else {statement.append(";");}
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
          closeEm(pStm);
@@ -67,27 +70,29 @@ public class DataGen {
 
    public static void genHometownAddress(Connection cnc) throws SQLException {
       PreparedStatement pStm = null;
-      int random;
+      StringBuilder statement;
+      int randStreet, randZip, randCity;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "HometownAddress(addressNumber, street, zipcode, cityId) " +
-                 "values (?, ?, ?, ?)");
+         statement = new StringBuilder("insert into HometownAddress(addressNumber, street, " +
+                 "zipcode, cityId) values ");
 
          for (int i = 1; i <= NUM_ADDRESS; i++) {
-            random = ThreadLocalRandom.current().nextInt(1, MAX_STREET_NUM + 1);
-            pStm.setString(1, String.format("%d", random));
+            randStreet = ThreadLocalRandom.current().nextInt(1,
+                    MAX_STREET_NUM + 1);
+            randZip = ThreadLocalRandom.current().nextInt(1,
+                    MAX_ZIPCODE + 1);
+            randCity = ThreadLocalRandom.current().nextInt(1,
+                    NUM_CITY + 1);
+            statement = statement.append(String.format("('%d', 'Street%d', '%d', %d)",
+                    randStreet, i, randZip, randCity));
 
-            pStm.setString(2, String.format("Street%d", i));
-
-            random = ThreadLocalRandom.current().nextInt(1, MAX_ZIPCODE + 1);
-            pStm.setString(3, String.format("%d", random));
-
-            random = ThreadLocalRandom.current().nextInt(1, NUM_CITY + 1);
-            pStm.setInt(4, random);
-
-            pStm.executeUpdate();
+            if(i != NUM_ADDRESS) {statement = statement.append(", ");}
+            else {statement = statement.append(";");}
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
          closeEm(pStm);
@@ -95,52 +100,53 @@ public class DataGen {
    }
 
    public static void genPerson(Connection cnc) throws SQLException {
-      ResultSet rst = null;
       PreparedStatement pStm = null;
-      int random;
+      StringBuilder statement;
+      int randAge, randGen, randArs;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "Person(firstName, lastName, age, gender, hometownAddressId) " +
-                 "values (?, ?, ?, ?, ?)");
+         statement = new StringBuilder("insert into Person(firstName, lastName, " +
+                 "age, gender, hometownAddressId) values ");
 
          for (int i = 1; i <= NUM_PERSON; i++) {
-            pStm.setString(1, String.format("First%d", i));
-            pStm.setString(2, String.format("Last%d", i));
+            randAge = ThreadLocalRandom.current().nextInt(MIN_AGE, MAX_AGE + 1);
+            randGen = ThreadLocalRandom.current().nextInt(1, NUM_GENDER + 1);
+            randArs = ThreadLocalRandom.current().nextInt(1, NUM_ADDRESS + 1);
 
-            random = ThreadLocalRandom.current().nextInt(MIN_AGE, MAX_AGE + 1);
-            pStm.setInt(3, random);
+            statement = statement.append(String.format("('First%d', 'Last%d', %d, %d, %d)",
+                    i, i, randAge, randGen, randArs));
 
-            random = ThreadLocalRandom.current().nextInt(1, NUM_GENDER + 1);
-            pStm.setInt(4, random);
-
-            random = ThreadLocalRandom.current().nextInt(1, NUM_ADDRESS + 1);
-            pStm.setInt(5, random);
-
-            pStm.executeUpdate();
+            if(i != NUM_PERSON) {statement = statement.append(", ");}
+            else {statement = statement.append(";");}
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
-         closeEm(rst, pStm);
+         closeEm(pStm);
       }
 
    }
 
    public static void genProfession(Connection cnc) throws SQLException {
       PreparedStatement pStm = null;
-      int random;
+      StringBuilder statement;
+      int randDiv;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "Profession(name, division) " +
-                 "values (?, ?)");
+         statement = new StringBuilder("insert into Profession(name, division) values ");
 
          for (int i = 1; i <= NUM_PROFESSION; i++) {
-            random = ThreadLocalRandom.current().nextInt(1, 2 + 1);
-            pStm.setString(1, String.format("Profession%d", i));
-            pStm.setInt(2, random);
-            pStm.executeUpdate();
+            randDiv = ThreadLocalRandom.current().nextInt(1, 2 + 1);
+            statement = statement.append(String.format("('Profession%d', %d)", i, randDiv));
+
+            if(i != NUM_PROFESSION) {statement = statement.append(", ");}
+            else {statement = statement.append(";");}
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
          closeEm(pStm);
@@ -149,19 +155,22 @@ public class DataGen {
 
    public static void genCompany(Connection cnc) throws SQLException {
       PreparedStatement pStm = null;
-      int random;
+      StringBuilder statement;
+      int randCity;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "Company(name, cityId) " +
-                 "values (?, ?)");
+         statement = new StringBuilder("insert into Company(name, cityId) values ");
 
          for (int i = 1; i <= NUM_COMPANY; i++) {
-            random = ThreadLocalRandom.current().nextInt(1, NUM_CITY + 1);
-            pStm.setString(1, String.format("Company%d", i));
-            pStm.setInt(2, random);
-            pStm.executeUpdate();
+            randCity = ThreadLocalRandom.current().nextInt(1, NUM_CITY + 1);
+            statement = statement.append(String.format("('Company%d', %d)", i, randCity));
+
+            if(i != NUM_COMPANY) {statement = statement.append(", ");}
+            else {statement = statement.append(";");}
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
          closeEm(pStm);
@@ -170,21 +179,25 @@ public class DataGen {
 
    public static void genDepartment(Connection cnc) throws SQLException {
       PreparedStatement pStm = null;
+      StringBuilder statement;
       int numDept;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "Department(name, companyId) " +
-                 "values (?, ?)");
+         statement = new StringBuilder("insert into Department(name, companyId) values ");
 
          for (int i = 1; i <= NUM_COMPANY; i++) {
-            pStm.setInt(2, i);
-            numDept = ThreadLocalRandom.current().nextInt(1, MAX_DEPT_PER_COMPANY);
+            numDept = ThreadLocalRandom.current().nextInt(1,
+                    MAX_DEPT_PER_COMPANY);
+
             for (int j = 1; j <= numDept; j++) {
-               pStm.setString(1, String.format("Department%d", j));
-               pStm.executeUpdate();
+               statement = statement.append(String.format("('Department%d', %d)", j, i));
+               if(i != NUM_COMPANY || j != numDept) {statement = statement.append(", ");}
+               else {statement = statement.append(";");}
             }
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
          closeEm(pStm);
@@ -194,68 +207,76 @@ public class DataGen {
    public static void genEmployee(Connection cnc) throws SQLException {
       ResultSet rst = null;
       PreparedStatement pStm = null, pDept = null;
-      int randInt, year, month, day, deptCount;
-      double randDou;
-      GregorianCalendar hiredDate;
+      StringBuilder statement;
+      int randPro, randCom, randDept, year, month, day, deptCount;
+      double randPay;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "Employee(personId, professionId, hiredDate, salary, " +
-                 "deptId, companyId) values (?, ?, ?, ?, ?, ?)");
+         statement = new StringBuilder("insert into Employee(personId, professionId, " +
+                 "hiredDate, salary, deptId, companyId) values ");
          pDept = cnc.prepareStatement("select id from Department " +
                  "where companyId = ?", Statement.RETURN_GENERATED_KEYS);
 
          for (int i = 1; i <= NUM_EMPLOYEE; i++) {
-            pStm.setInt(1, i);
-
-            randInt = ThreadLocalRandom.current().nextInt(1, NUM_PROFESSION + 1);
-            pStm.setInt(2, randInt);
+            randPro = ThreadLocalRandom.current().nextInt(1,
+                    NUM_PROFESSION + 1);
 
             year = ThreadLocalRandom.current().nextInt(MIN_YEAR, MAX_YEAR + 1);
-            month = ThreadLocalRandom.current().nextInt(1, (int)NUM_MONTH + 1);
+            month = ThreadLocalRandom.current().nextInt(1, (int)
+                    NUM_MONTH + 1);
             day = ThreadLocalRandom.current().nextInt(1, (int)NUM_DAYS + 1);
-            hiredDate = new GregorianCalendar(year, month, day);
-            pStm.setDate(3, new java.sql.Date((hiredDate.getTime().getTime())));
 
-            randDou = ThreadLocalRandom.current().nextDouble(MIN_PAY, MAX_PAY + 1);
-            pStm.setFloat(4, (float)randDou);
+            randPay = ThreadLocalRandom.current().nextDouble(MIN_PAY, MAX_PAY + 1);
 
-            randInt = ThreadLocalRandom.current().nextInt(1, NUM_COMPANY + 1);
-            pStm.setInt(6, randInt);
+            randCom = ThreadLocalRandom.current().nextInt(1, NUM_COMPANY + 1);
 
-            pDept.setInt(1, randInt);
+            pDept.setInt(1, randCom);
             rst = pDept.executeQuery();
 
             deptCount = 0;
             while(rst.next()) {deptCount++;}
 
-            randInt = ThreadLocalRandom.current().nextInt(1, deptCount + 1);
-            pStm.setInt(5, randInt);
-            pStm.executeUpdate();
+            randDept = ThreadLocalRandom.current().nextInt(1, deptCount + 1);
+
+            statement = statement.append(String.format("(%d, %d, '%d-%02d-%02d', %f, %d, %d)",
+                    i, randPro, year, month, day, (float)randPay, randDept, randCom));
+
+            if(i != NUM_EMPLOYEE) {statement = statement.append(", ");}
+            else {statement = statement.append(";");}
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
          closeEm(rst, pDept, pStm);
       }
    }
 
-   public static void genCompanyXProfession(Connection cnc) throws SQLException {
+   public static void genCompanyXProfession(Connection cnc)
+           throws SQLException {
       PreparedStatement pStm = null;
+      StringBuilder statement;
       int numPro;
 
       try {
-         pStm = cnc.prepareStatement("insert into " +
-                 "CompanyXProfession(companyId, professionId) " +
-                 "values (?, ?)");
+         statement = new StringBuilder("insert into CompanyXProfession(companyId, " +
+                 "professionId) values ");
 
          for (int i = 1; i <= NUM_COMPANY; i++) {
-            numPro = ThreadLocalRandom.current().nextInt(1, NUM_PROFESSION / 3 + 1);
+            numPro = ThreadLocalRandom.current().nextInt(1,
+                    NUM_PROFESSION / 3 + 1);
+
             for (int j = 1; j <= numPro; j++) {
-               pStm.setInt(1, i);
-               pStm.setInt(2, j);
-               pStm.executeUpdate();
+               statement = statement.append(String.format("(%d, %d)", i, j));
+
+               if(i != NUM_COMPANY || j != numPro) {statement = statement.append(", ");}
+               else {statement = statement.append(";");}
             }
          }
+
+         pStm = cnc.prepareStatement(statement.toString());
+         pStm.executeUpdate();
       }
       finally {
          closeEm(pStm);
@@ -275,12 +296,12 @@ public class DataGen {
                  "Rating(ratedId, score, raterId) " +
                  "values (?, ?, ?)");
          pUpper = cnc.prepareStatement("select personId from Employee " +
-                         "join Profession P on professionId = P.id where deptId = ? " +
-                         "and companyId = ? and division = 'Upper'",
+                 "join Profession P on professionId = P.id where deptId = ? " +
+                 "and companyId = ? and division = 'Upper'",
                  Statement.RETURN_GENERATED_KEYS);
          pLower = cnc.prepareStatement("select personId from Employee " +
-                         "join Profession P on professionId = P.id where deptId = ? " +
-                         "and companyId = ? and division = 'Lower'",
+                 "join Profession P on professionId = P.id where deptId = ? " +
+                 "and companyId = ? and division = 'Lower'",
                  Statement.RETURN_GENERATED_KEYS);
          pDept = cnc.prepareStatement("select id from Department " +
                  "where companyId = ?", Statement.RETURN_GENERATED_KEYS);
