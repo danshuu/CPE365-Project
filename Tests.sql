@@ -47,7 +47,7 @@ SELECT C.name "Company", AVG(score) "score"
 FROM Rating R JOIN Employee E
 ON R.ratedId = E.personId JOIN Department D
 ON E.deptId = D.id JOIN Company C
-ON D.companyId = C.id
+ON E.companyId = C.id
 GROUP BY C.name
 ORDER BY AVG(score) DESC
 LIMIT 5;
@@ -64,9 +64,9 @@ WHERE p.id = e.personId and r.ratedId = e.personId and (hiredDate < "2015-06-20"
 SELECT Co.name "Company", C.name "City", COUNT(*) "Employee Count"
 FROM Employee E JOIN Department D
 ON deptId = D.id JOIN Company Co
-ON D.companyId = Co.id JOIN City C
+ON E.companyId = Co.id JOIN City C
 ON cityId = C.id
-WHERE hiredDate < '2016-01-01'
+WHERE hiredDate < '2000-01-01'
 GROUP BY Co.name, C.name
 HAVING COUNT(*) >= 5;
 
@@ -75,7 +75,7 @@ SELECT firstName, lastName, score
 FROM Person P JOIN Employee E 
 ON P.id = E.personId JOIN Rating R
 ON E.personId = R.ratedId
-WHERE R.raterId = 14;
+WHERE R.raterId = 84933;
 
 -- 10. List each employee with a lower division profession who has not received a rating
 SELECT firstName "First Name", lastName "Last Name", Pro.name "Profession"
@@ -100,7 +100,7 @@ ON E2.personId = P2.id
  AND P1.hometownAddressId = P2.hometownAddressId JOIN HometownAddress H
 ON P1.hometownAddressId = H.id JOIN City C
 ON H.cityId = C.id
-WHERE Co.name = "Google";
+WHERE Co.name = "Company1";
 
 -- 12. List each company, city, and profession where the company offers the profession but has no employees in the profession
 SELECT DISTINCT Co.name "Company", C.name "City", P.name "Profession"
@@ -123,7 +123,7 @@ WHERE NOT EXISTS (
    FROM Rating R
    WHERE E.personId = R.raterId
 )
- AND Pro.name = "Manager";
+ AND Pro.name = "Profession100";
 
 -- 14. List all lower division employees with a salary greater than or equal to 15.00
 SELECT P.id, firstName, lastName, salary
@@ -174,11 +174,6 @@ FROM HometownAddress H JOIN Person P
 ON H.id = P.hometownAddressId JOIN Employee E
 ON P.id = E.personId JOIN Department D
 ON E.deptId = D.id JOIN Company Co
-ON D.companyId = Co.id
+ON E.companyId = Co.id
  AND H.cityId != Co.cityId;
-
--- List the top five companies with the highest average salary of lower division workers
-
--- List each department in 'x' company that has at least 3 employees with a rating of 'y' or greater
-
 
