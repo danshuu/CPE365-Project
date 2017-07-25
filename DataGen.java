@@ -24,12 +24,10 @@ public class DataGen {
    private static final int MIN_ZIPCODE = 10000;
    private static final int MAX_ZIPCODE = 99999;
    private static final int NUM_GENDER = 3;
-   private static final long EPOCH_YEAR = 1970;
    private static final int MIN_YEAR = 1985;
    private static final int MAX_YEAR = 2016;
    private static final long NUM_DAYS = 28;
    private static final long NUM_MONTH = 12;
-   private static final long MILLISEC_IN_DAY = 86400000;
    private static final int MIN_SCORE = 0;
    private static final int MAX_SCORE = 10;
 
