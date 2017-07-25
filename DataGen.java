@@ -21,6 +21,7 @@ public class DataGen {
    private static final double MAX_PAY = 45.00;
    private static final int NUM_STATES = 50;
    private static final int MAX_STREET_NUM = 99999;
+   private static final int MIN_ZIPCODE = 10000;
    private static final int MAX_ZIPCODE = 99999;
    private static final int NUM_GENDER = 3;
    private static final long EPOCH_YEAR = 1970;
@@ -80,7 +81,7 @@ public class DataGen {
          for (int i = 1; i <= NUM_ADDRESS; i++) {
             randStreet = ThreadLocalRandom.current().nextInt(1,
                     MAX_STREET_NUM + 1);
-            randZip = ThreadLocalRandom.current().nextInt(1,
+            randZip = ThreadLocalRandom.current().nextInt(MIN_ZIPCODE,
                     MAX_ZIPCODE + 1);
             randCity = ThreadLocalRandom.current().nextInt(1,
                     NUM_CITY + 1);
