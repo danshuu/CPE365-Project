@@ -35,7 +35,6 @@ CREATE TABLE HometownAddress (
    addressNumber CHAR(5) NOT NULL,
    street VARCHAR(40) NOT NULL,
    zipcode CHAR(5) NOT NULL,
-   zipcodeExt CHAR(4),
    cityId INT NOT NULL,
    CONSTRAINT FKHometownAddress_cityId FOREIGN KEY (cityId)
     REFERENCES City(id)
@@ -132,9 +131,9 @@ INSERT INTO City VALUES
    (10, "Portland", 'OR');
 
 INSERT INTO HometownAddress VALUES
-   (1, '1111', 'Happy Lane', '93410', NULL, 4),
-   (2, '1121', 'Happy Lane2', '93420', NULL, 9),
-   (3, '1131', 'Happy Lane3', '93430', NULL, 1);
+   (1, '1111', 'Happy Lane', '93410', 4),
+   (2, '1121', 'Happy Lane2', '93420', 9),
+   (3, '1131', 'Happy Lane3', '93430', 1);
 
 INSERT INTO Person (firstName, lastName, age, gender, hometownAddressId) VALUES 
    ('Bob', 'Smith', 21, 'M', 1), 
