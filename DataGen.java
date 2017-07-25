@@ -11,34 +11,44 @@ public class DataGen {
     //NUM_EMPLOYEE must not exceed NUM_PERSON
     private static final int NUM_RATING = 80000;
     private static final int NUM_COMPANY = 4000;
-    private static final int NUM_DEPARTMENT = 4000;
+    private static final int MAX_DEPT_PER_COMPANY = 10;
     private static final int MIN_AGE = 18;
     private static final int MAX_AGE = 60;
     private static final double MIN_PAY = 13.00;
     private static final double MAX_PAY = 45.00;
+    private static final int NUM_STATES = 50;
+    private static final int MAX_STREET_NUM = 99999;
+    private static final int MAX_ZIPCODE = 99999;
+    private static final int NUM_GENDER = 3;
+    private static final int MIN_YEAR = 1985;
+    private static final int MAX_YEAR = 2016;
+    private static final int NUM_DAYS = 28;
+    private static final int NUM_MONTH = 12;
+    private static final int MIN_SCORE = 0;
+    private static final int MAX_SCORE = 10;
 
 	public static void genCity(Connection cnc) {
-       ResultSet rst = null;
        PreparedStatement pStm = null;
+       int random;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
            "City(name, state) " +
            "values (?, ?)");
 
-          for (int i = 1; i < NUM_CITY; i++) {
+          for (int i = 1; i <= NUM_CITY; i++) {
+          	 random = ThreadLocalRandom.current().nextInt(1, NUM_STATES + 1);
              pStm.setString(1, String.format("City%d", i));
-             pStm.setString(2, String.format("%02d", (i % 50) + 1));
+             pStm.setString(2, String.format("%02d", random);
              pStm.executeUpdate();
           }
        }
        finally {
-          closeEm(rst, pStm);
+          closeEm(pStm);
        }
 	}
 
 	public static void genHometownAddress(Connection cnc) {
-       ResultSet rst = null;
        PreparedStatement pStm = null;
        int random;
 
@@ -47,13 +57,13 @@ public class DataGen {
            "HometownAddress(addressNumber, street, zipcode, cityId) " +
            "values (?, ?, ?, ?)");
 
-          for (int i = 1; i < NUM_ADDRESS; i++) {
-          	 random = ThreadLocalRandom.current().nextInt(1, 100000);
+          for (int i = 1; i <= NUM_ADDRESS; i++) {
+          	 random = ThreadLocalRandom.current().nextInt(1, MAX_STREET_NUM + 1);
              pStm.setString(1, random);
 
-             pStm.setString(2, String.format("Street%d", i ));
+             pStm.setString(2, String.format("Street%d", i));
 
-             random = ThreadLocalRandom.current().nextInt(1, 100000);
+             random = ThreadLocalRandom.current().nextInt(1, MAX_ZIPCODE + 1);
              pStm.setString(3, String.format("%d", random);
 
              random = ThreadLocalRandom.current().nextInt(1, NUM_CITY + 1);
@@ -63,7 +73,7 @@ public class DataGen {
           }
        }
        finally {
-          closeEm(rst, pStm);
+          closeEm(pStm);
        }
 	}
 
@@ -77,16 +87,17 @@ public class DataGen {
            "Person(firstName, lastName, age, gender, hometownAddressId) " +
            "values (?, ?, ?, ?, ?)");
 
-          for (int i = 1; i < NUM_PERSON; i++) {
+          for (int i = 1; i <= NUM_PERSON; i++) {
              pStm.setString(1, String.format("First%d", i));
              pStm.setString(2, String.format("Last%d", i));
 
              random = ThreadLocalRandom.current().nextInt(MIN_AGE, MAX_AGE + 1);
              pStm.setInt(3, random);
 
-             pStm.setString(4, );
+             random = ThreadLocalRandom.current().nextInt(1, NUM_GENDER + 1);
+             pStm.setString(4, random);
 
-             random = ThreadLocalRandom.current().nextInt(1, NUM_ADDRESS);
+             random = ThreadLocalRandom.current().nextInt(1, NUM_ADDRESS + 1);
              pStm.setInt(5, random);
 
              pStm.executeUpdate();
@@ -99,7 +110,6 @@ public class DataGen {
 	}
 
 	public static void genProfession(Connection cnc) {
-       ResultSet rst = null;
        PreparedStatement pStm = null;
        int random;
 
@@ -108,7 +118,7 @@ public class DataGen {
            "Profession(name, division) " +
            "values (?, ?)");
 
-          for (int i = 1; i < NUM_PROFESSION; i++) {
+          for (int i = 1; i <= NUM_PROFESSION; i++) {
           	 random = ThreadLocalRandom.current().nextInt(1, 2 + 1);
              pStm.setString(1, String.format("Profession%d", i));
              pStm.setString(2, random);
@@ -116,78 +126,97 @@ public class DataGen {
           }
        }
        finally {
-          closeEm(rst, pStm);
+          closeEm(pStm);
        }
 	}
 
 	public static void genCompany(Connection cnc) {
-       ResultSet rst = null;
        PreparedStatement pStm = null;
+       int random;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
            "Company(name, cityId) " +
            "values (?, ?)");
 
-          for (int i = 1; i < NUM_COMPANY; i++) {
+          for (int i = 1; i <= NUM_COMPANY; i++) {
+          	 random = ThreadLocalRandom.current().nextInt(1, NUM_CITY + 1);
              pStm.setString(1, String.format("Company%d", i));
-             pStm.setInt(2, (i % NUM_CITY) + 1);
+             pStm.setInt(2, random);
              pStm.executeUpdate();
           }
        }
        finally {
-          closeEm(rst, pStm);
+          closeEm(pStm);
        }
 	}
 
 	public static void genDepartment(Connection cnc) {
-       ResultSet rst = null;
        PreparedStatement pStm = null;
+       int numDept;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
            "Department(name, companyId) " +
            "values (?, ?)");
 
-          for (int i = 1; i < NUM_DEPARTMENT; i++) {
-             pStm.setString(1, String.format("Department%d", i));
-             pStm.setInt(2, );
-             pStm.executeUpdate();
+          for (int i = 1; i <= NUM_COMPANY; i++) {
+          	 pStm.setInt(2, i);
+             for (int j = 1; j <= numDept; j++) {
+                numDept = ThreadLocalRandom.current().nextInt(1, MAX_DEPT_PER_COMPANY);
+                pStm.setString(1, String.format("Department%d", j));
+                pStm.executeUpdate();
+             }
           }
        }
        finally {
-          closeEm(rst, pStm);
+          closeEm(pStm);
        }
 	}
 
 	public static void genEmployee(Connection cnc) {
-       ResultSet rst = null;
-       PreparedStatement pStm = null;
-       int random;
+	   ResultSet rst = null;
+       PreparedStatement pStm = null, pDept = null;
+       int random, year, month, day, deptCount;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
            "Employee(personId, professionId, hiredDate, salary, " +
            "deptId, companyId) values (?, ?, ?, ?, ?, ?)");
+          pDept = cnc.prepareState("select id from Department " +
+           "where companyId = ?", Statement.RETURN_GENERATED_KEYS);
 
-          for (int i = 1; i < NUM_EMPLOYEE; i++) {
+          for (int i = 1; i <= NUM_EMPLOYEE; i++) {
              pStm.setInt(1, i);
 
-             random = ThreadLocalRandom.current().nextInt(1, NUM_PROFESSION);
+             random = ThreadLocalRandom.current().nextInt(1, NUM_PROFESSION + 1);
              pStm.setInt(2, random);
 
-             pStm.setDate(3, );
+             year = ThreadLocalRandom.current().nextInt(MIN_YEAR, MAX_YEAR + 1);
+             month = ThreadLocalRandom.current().nextInt(1, NUM_MONTH + 1);
+             day = ThreadLocalRandom.current().nextInt(1, NUM_DAYS + 1);
+             pStm.setDate(3, Date(year, month, day));
 
              random = ThreadLocalRandom.current().nextDouble(MIN_PAY, MAX_PAY + 1);
              pStm.setFloat(4, random);
 
-             pStm.setInt(5, );
-             pStm.setInt(6, );
+             random = ThreadLocalRandom.current().nextInt(1, NUM_COMPANY + 1);
+             pStm.setInt(6, random);
+
+             rst = pDept.executeQuery();
+
+             deptCount = 0;
+             while(rst.next()) {
+                deptCount++;
+             }
+
+             random = ThreadLocalRandom.current().nextInt(1, deptCount + 1);
+             pStm.setInt(5, random);
              pStm.executeUpdate();
           }
        }
        finally {
-          closeEm(rst, pStm);
+          closeEm(rst, pDept, pStm);
        }
 	}
 
@@ -197,22 +226,34 @@ public class DataGen {
 
 	public static void genRating(Connection cnc) {
 	   ResultSet rst = null;
-       PreparedStatement pStm = null;
+       PreparedStatement pStm = null, pUpper = null, pLower = null;
+       int random;
 
        try {
           pStm = cnc.prepareStatement("insert into " +
            "Rating(ratedId, score, raterId) " +
            "values (?, ?, ?)");
+          pUpper = cnc.prepareStatement("select personId from Employee " +
+           "join Profession P on professionId = P.id where deptId = ? " +
+           "and companyId = ? and division = 'Upper'",
+           Statement.RETURN_GENERATED_KEYS)
+          pLower = cnc.prepareStatement("select personId from Employee " +
+           "join Profession P on professionId = P.id where deptId = ? " +
+           "and companyId = ? and division = 'Lower'",
+           Statement.RETURN_GENERATED_KEYS)
 
-          for (int i = 1; i < NUM_RATING; i++) {
+          for (int i = 1; i <= NUM_RATING; i++) {
+             random = ThreadLocalRandom.current().nextInt(MIN_SCORE, MAX_SCORE + 1);
+             pStm.setInt(2, random);
+
              pStm.setInt(1, );
-             pStm.setInt(2, );
+
              pStm.setInt(3, );
              pStm.executeUpdate();
           }
        }
        finally {
-          closeEm(rst, pStm);
+          closeEm(rst, pLower, pUpper, pStm);
        }
 	}
 	
