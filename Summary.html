@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>CPE365 Project Summary Write-up</h1>
+<h3>By:</h3>
+<li>Calvin Nguyen</li>
+<li>Esteban Ramos</li>
+<li>Daniel Shu</li>
+
+<body>
+<p style="margin:100;padding:100">
+When initially designing our database, we knew we wanted to include cities for company locations, and where a person was born. We wanted data that would give information such as the number of employees that are working remotely compare to the number working on-site or the number of employees who work for a certain company that fall under an age group. 
+</p>
+
+
+During our implementation of this database, we ran into a few design dilemmas. We initially started with a column “city” for the person table and company table, but quickly realized this was a waste. We then evolved to just committing one table to city names for the other tables to lookup. Another design feature that we spent some time contemplating was whether or not to give the ‘name’ column in Profession a unique key. We decided not to in the end because we wanted companies to be able to decide whether a certain profession was ‘lower’ or ‘upper’ division. For example, a hiring manager might be deemed ‘lower’ division at Google and may be ‘upper’ division at Apple. 
+
+
+<p>
+A significant aspect that we learned was the importance of TDD. It was much easier to create tables that weren’t cumbersome after writing a few queries in plain english that we were hoping to perform. We started to make create table statements and test queries together at first, but then drifted more towards ignoring the queries and focusing solely on the schema. After reverting back to TDD, the schema came quicker and easier because we knew what we needed. Moreover, we also found that the queries were much easier to think through by creating the ERD first. Having a visual representation of our tables to look at while doing the queries was very helpful.
+</p>
+
+</body>
+
+</body>
+</html>
+
